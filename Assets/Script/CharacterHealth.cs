@@ -44,7 +44,7 @@ public class CharacterHealth : MonoBehaviour
         if(_stageManager != null)
             _stageManager.objectDeath(this.gameObject);
         
-        gameObject.SetActive(false);
+        //gameObject.SetActive(false);
     }
     
     //코루틴 함수 -> 지정한 무적 시간만큼 TakeDamage() 무력화
