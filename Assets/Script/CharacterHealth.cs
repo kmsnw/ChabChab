@@ -58,6 +58,24 @@ public class CharacterHealth : MonoBehaviour
         _isInvincible = false;
     }
     
+    //체력 일정량 회복 -> 힐팩을 먹었을때.....
+    public void Heal(int healAmount)
+    {
+        _currentHealth += healAmount;
+        if (_currentHealth > maxHealth)
+        {
+            _currentHealth = maxHealth;
+        }
+        
+    }
+
+    //체력 최대 회복 -> 리스폰 등..
+    public void HealFull()
+    {
+        _currentHealth = maxHealth;
+        _isInvincible = false;
+    }
+    
     
     void Start()
     {

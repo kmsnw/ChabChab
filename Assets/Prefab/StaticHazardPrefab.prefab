@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 7410177952417115107}
   - component: {fileID: 6079406508831094196}
   m_Layer: 0
-  m_Name: DefaultEnemyPrefab
+  m_Name: StaticHazardPrefab
   m_TagString: enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

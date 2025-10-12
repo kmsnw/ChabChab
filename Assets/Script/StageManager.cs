@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -14,6 +15,7 @@ public class StageManager : MonoBehaviour
     //현재 배치된 벽
     private GameObject _currentBoundaryWall;
     
+    private ICheckpointSavable[] _savableObjects;
     
     //다음 씬 이름(씬 전환용)
     [Header("NextScene")]
@@ -78,6 +80,12 @@ public class StageManager : MonoBehaviour
         
         Debug.Log("체크포인트 갱신");
         _currentCheckPoint = newCheckPoint;
+
+        //갱신 시점 기준 오브젝트들 상태 저장
+        foreach (var savableObject in _savableObjects)
+        {
+            savableObject.SaveState();
+        }
         
         //콜라이더(벽) 생성..
         if (_currentBoundaryWall != null)
@@ -107,42 +115,62 @@ public class StageManager : MonoBehaviour
     {
         Debug.Log("최신 체크포인트 기반 리로드");
         //인터페이스 구현 오브젝트들 로드
-        
+
+        foreach (var savableObject in _savableObjects)
+        {
+            savableObject.LoadState();
+        }
         
         //currentCheckPoint 기반 플레이어 리스폰
         RespawnPlayer();
-        
     }
 
     public void RespawnPlayer()
     {
         Debug.Log("RespawnPlayer");
+        
+        if (_currentCheckPoint == null)
+        {
+            Debug.LogError("null currentCheckPoint");
+            return;
+        }
+        
         //최신 체크포인트 위치
         Vector3 checkPointPos = _currentCheckPoint.transform.position;
         
         //체크포인트 기준 좌우 리스폰 오프셋
         const float playerOffset = 0.3f;
+        
+        //플레이어 리스폰
+        //위치 조정 및 체력 회복
+        for (int i = 0; i < _players.Length; i++)
+        {
+            GameObject playerObj = _players[i].gameObject;
 
-        
-        //체크포인트 기반 플레이어 위치 재설정
-        GameObject playerObj1 = _players[0].gameObject;
-        playerObj1.transform.position = new Vector3(
-            checkPointPos.x - playerOffset,
-            checkPointPos.y,
-            checkPointPos.z
-            );
-        
-        GameObject playerObj2 = _players[1].gameObject;
-        playerObj2.transform.position = new Vector3(
-            checkPointPos.x + playerOffset,
-            checkPointPos.y,
-            checkPointPos.z
-            );
-        
+            float spawnDirection = (i * 2) - 1;
+            
+            Vector3 spawnPos = new Vector3(
+                checkPointPos.x + (playerOffset * spawnDirection),
+                checkPointPos.y,
+                checkPointPos.z);
+            
+            playerObj.transform.position = spawnPos;
+            
+            //currentHealth = maxHealth
+            CharacterHealth healthComp = playerObj.GetComponent<CharacterHealth>();
+            
+            if (healthComp != null)
+            {
+                healthComp.HealFull();
+            }
+        }
     }
     
     void Start()
     {
+        _savableObjects = FindObjectsOfType<MonoBehaviour>().OfType<ICheckpointSavable>().ToArray();
+        
+        
         _players = FindObjectsOfType<PlayerController>();
         
         if (button1 == null || button2 == null)
