@@ -17,7 +17,7 @@ GameObject:
   - component: {fileID: 1117094943638537614}
   - component: {fileID: 1181628875369110504}
   m_Layer: 0
-  m_Name: PlayerPrefab
+  m_Name: SecondPlayerPrefab
   m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -80,7 +80,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_Sprite: {fileID: 10913, guid: 0000000000000000f000000000000000, type: 0}
-  m_Color: {r: 0, g: 0.28605884, b: 0.9245283, a: 1}
+  m_Color: {r: 0.6862745, g: 0, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -102,10 +102,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a24384cc3921f494791d1d7797074fb8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  horizontal: 0
-  right: 100
-  left: 97
-  interactKey: 306
+  right: 275
+  left: 276
+  interactKey: 303
 --- !u!50 &3390957878676215926
 Rigidbody2D:
   serializedVersion: 4

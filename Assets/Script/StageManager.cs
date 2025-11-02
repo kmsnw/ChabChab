@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -38,6 +39,9 @@ public class StageManager : MonoBehaviour
     //플레이어
     private PlayerController[] _players;
 
+    //카메라
+    private CameraController _camera;
+    
     
     private void CheckStageClear()
     {
@@ -49,6 +53,7 @@ public class StageManager : MonoBehaviour
 
         if (isButton1_On && isButton2_On)
         {
+            Debug.Log("Clear Stage");
             stageClear();
         }
     }
@@ -165,13 +170,34 @@ public class StageManager : MonoBehaviour
             }
         }
     }
+
+    //플레이어 위치 기반 카메라가 이동할 위치 산출
+    //x축 기준 더 뒤에 있는 플레이어 위치를 기반 -> 대안: 두 플레이어 평균?
+    public Vector3 SetCameraPosition()
+    {
+        Transform focusTarget = (_players[0].transform.position.x < _players[1].transform.position.x) ? _players[0].transform : _players[1].transform;
+
+        Vector3 offset = new Vector3(2f, 0f, -10f);
+        
+        Vector3 targetPosition = focusTarget.position + offset;
+        targetPosition.y = (_players[0].transform.position.y + _players[1].transform.position.y) / 2f;
+        
+        return targetPosition;
+    }
     
     void Start()
     {
         _savableObjects = FindObjectsOfType<MonoBehaviour>().OfType<ICheckpointSavable>().ToArray();
         
-        
         _players = FindObjectsOfType<PlayerController>();
+     
+        _camera = FindObjectOfType<CameraController>();
+
+        if (_camera == null)
+        {
+            Debug.LogError("CameraController 누락");
+        }
+        
         
         if (button1 == null || button2 == null)
         {
@@ -183,5 +209,16 @@ public class StageManager : MonoBehaviour
     {
         //매 프레임 버튼 태그 확인
         CheckStageClear();
+        
+        _camera.SetTargetPosition(SetCameraPosition());
+
+        
     }
+
+    private void LateUpdate()
+    {
+   
+          
+    }
+
 }

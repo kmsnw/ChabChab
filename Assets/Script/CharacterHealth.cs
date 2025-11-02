@@ -43,7 +43,6 @@ public class CharacterHealth : MonoBehaviour
     {
         if(_stageManager != null)
             _stageManager.objectDeath(this.gameObject);
-        
         //gameObject.SetActive(false);
     }
     

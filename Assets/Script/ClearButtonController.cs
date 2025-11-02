@@ -15,7 +15,12 @@ public class ClearButtonController : MonoBehaviour, IInteractable
     public void Interact(bool isInteracting, PlayerController player)
     {
         //상호작용 상태에 따라 태그 변경
-        if (isInteracting) gameObject.tag = "On";
+        if (isInteracting)
+        {
+            Debug.Log("Clear Button: On");
+            gameObject.tag = "On";
+         
+        }
         else gameObject.tag = "Off";
     }
     
