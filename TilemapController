@@ -1,0 +1,27 @@
+using UnityEngine;
+
+public class TilemapController : MonoBehaviour
+{
+    public GameObject stairsTilemap; // 계단 타일맵
+
+    void Awake()
+    {
+        stairsTilemap.SetActive(false); // 시작 시 숨김
+    }
+
+    void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.CompareTag("Player") && this.CompareTag("Key"))
+        {
+            stairsTilemap.SetActive(true); // 플레이어와 충돌시 stairsTilemap을 생성
+        }
+    }
+
+    void OnTriggerExit2D(Collider2D collision)
+    {
+        if (collision.CompareTag("Player") && this.CompareTag("Key"))
+        {
+            stairsTilemap.SetActive(false); // 플레이어가 충돌해제시 stairsTilemap을 삭제
+        }
+    } 
+} 
