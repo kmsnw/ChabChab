@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
+//Enemy AI용 state 인터페이스
 
 
 namespace AI.FSM

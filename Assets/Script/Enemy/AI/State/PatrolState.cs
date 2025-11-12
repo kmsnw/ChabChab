@@ -4,7 +4,8 @@ using System.Runtime.InteropServices;
 using Unity.VisualScripting;
 using UnityEngine;
 
-
+//배회 state.
+//
 
 namespace AI.FSM
 {

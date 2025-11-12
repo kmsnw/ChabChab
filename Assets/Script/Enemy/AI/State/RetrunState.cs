@@ -12,7 +12,6 @@ namespace AI.FSM
         private EnemyAI owner;
         private Vector3 destination; // 복귀 목표 지점 (startPosition)
         
-        // ReturnState는 항상 PatrolState로 복귀해야 하므로, PatrolState의 생성자를 호출합니다.
         public ReturnState(EnemyAI owner)
         {
             this.owner = owner;
@@ -21,7 +20,6 @@ namespace AI.FSM
 
         public void Enter()
         {
-            // 1. 추격 속도 그대로 복귀 이동 시작
             owner.IsMoving = true;
         }
 
@@ -32,10 +30,10 @@ namespace AI.FSM
             owner.currentMoveDirection = directionToStart;
             
             // 2. 복귀 완료 조건 체크
-            // X축 위치만 비교하여 목표 지점에 도달했는지 확인합니다.
+            // X축 위치기반 복귀 여부 체크
             if (Mathf.Abs(owner.transform.position.x - destination.x) < 0.1f)
             {
-                // 복귀 완료!
+                // 복귀 완료 -> patrol 전환
                 owner.IsMoving = false;
                 owner.ChangeState(new PatrolState(owner)); // <-- PatrolState로 전환
             }
@@ -43,7 +41,7 @@ namespace AI.FSM
 
         public void Exit()
         {
-            // 복귀 중 이동을 멈추기 위해 (선택적)
+            // 복귀 중 이동을 멈춤 -> 트리거 관계 없이 강제복귀
             owner.currentMoveDirection = 0f;
         }
     }

@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-//데미지가 있는 오브젝트들의 기반 클래스
+//데미지 전용 스크립트
 //개별 고유의 데미지 및 해당 데미지 기반 TakeDamage(characterhealth)호출
 
 public class DamageSource : MonoBehaviour

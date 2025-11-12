@@ -16,6 +16,7 @@ public class EnemyAI : MonoBehaviour, ICheckpointSavable
         
     private Rigidbody2D rb;
     
+    //체크포인트 로드
     private Vector3 _initialPosition;
     private CharacterHealth _healthComp;
     
@@ -25,6 +26,7 @@ public class EnemyAI : MonoBehaviour, ICheckpointSavable
     [Header("Patrol Data")]
     public float patrolRadius; //배회 반경
     public float moveSpeed; //배회 이동 속도
+    
     public float centerBiasMax = 0.4f; //가중치. 반경 내 위치를 기반으로 확률을 상이하게 적용
     // -> 경계에 가까울 수록, 가중치 원본에 근사. -> 중앙 회귀 확률 상승 -> "경계쪽으로 갈 수록 중앙 회귀 확률이 높음"
 
@@ -62,8 +64,8 @@ public class EnemyAI : MonoBehaviour, ICheckpointSavable
     {
         if (rb == null) return;
         
-        //목표 지점까지의 방향벡터
         
+        //목표 지점까지의 방향벡터
         Vector2 Velocity = new Vector2(currentMoveDirection * moveSpeed, rb.velocity.y);
         
         rb.velocity = Velocity;
@@ -108,23 +110,21 @@ public class EnemyAI : MonoBehaviour, ICheckpointSavable
     {
         Debug.Log("OnDetected");
         
-        // 현재 상태가 PatrolState일 때만 Chase로 전환하여 중복 전환 방지
+        // 현 상태가 PatrolState일 때만 Chase 전환 -> 중복 전환 방지
         if (currentState is PatrolState) 
         {
             ChangeState(new ChaseState(this, player));
         }
     }
     
+    
     public bool IsPlayerDetected()
     {
-        // 예시: DetectCollider 스크립트가 플레이어가 아직 범위 내에 있는지 확인하는 플래그를 관리한다고 가정
-        // return detectCollider.IsPlayerInside; 
-    
-        // 이 로직은 실제 감지 콜라이더의 상태를 반환하도록 구현해야 합니다.
         return isPlayerInsideDetector; 
     }
     
     
+    //몬스터의 체크포인트 기반 save,load 동작
     public void SaveState()
     {
         
@@ -137,12 +137,12 @@ public class EnemyAI : MonoBehaviour, ICheckpointSavable
     }
 
     
-    // Start is called before the first frame update
+    
     void Start()
     {
         baseMoveSpeed = moveSpeed;
         
-        // 1. 컴포넌트 및 기본 데이터 초기화 (Start 시점의 위치를 기준으로 설정)
+     
         rb = GetComponent<Rigidbody2D>();
         if (rb == null) Debug.LogError("Rigidbody2D component not found");
     
@@ -151,10 +151,11 @@ public class EnemyAI : MonoBehaviour, ICheckpointSavable
 
         currentState = new PatrolState(this);
         _initialPosition = transform.position; // 체크포인트 로드를 위한 초기 위치
+        
         startPosition = _initialPosition;      // FSM 배회 중심 위치 설정
     
-        // 2. FSM 시작 (ChangeState를 통해 단 한 번만 호출)
-        // PatrolState의 Enter() 함수가 이 시점에 호출됩니다.
+        // FSM (ChangeState를 통해 한 번만 호출)
+        // PatrolState의 Enter() 호출(첫 시작 디폴트 배회)
         ChangeState(new PatrolState(this)); 
     }
 
