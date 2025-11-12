@@ -22,8 +22,6 @@ public class Monster : DamageSource, ICheckpointSavable
         _healthComp.HealFull(); //체력 회복
     }
 
-    
-
     // Start is called before the first frame update
     void Start()
     {

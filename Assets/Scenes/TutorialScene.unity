@@ -177,7 +177,7 @@ BoxCollider2D:
     border: {x: 0.25, y: 0.25, z: 0.25, w: 0.25}
     pivot: {x: 0.5, y: 0.5}
     oldSize: {x: 1, y: 1}
-    newSize: {x: 8.641015, y: 1}
+    newSize: {x: 8.641015, y: 0.944453}
     adaptiveTilingThreshold: 0.5
     drawMode: 2
     adaptiveTiling: 0
@@ -231,7 +231,7 @@ SpriteRenderer:
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 2
-  m_Size: {x: 8.641015, y: 1}
+  m_Size: {x: 8.641015, y: 0.944453}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
@@ -256,6 +256,11 @@ Transform:
 GameObject:
   m_CorrespondingSourceObject: {fileID: 5440176416654377454, guid: dd7bb6f345fabe74ca03817c12d96429, type: 3}
   m_PrefabInstance: {fileID: 3134097616923944018}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &307143601 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 1227139360504606460, guid: 4bb6dad7e80b3eb4a85a806eef6da427, type: 3}
+  m_PrefabInstance: {fileID: 6557032943921815771}
   m_PrefabAsset: {fileID: 0}
 --- !u!1 &760609834
 GameObject:
@@ -574,6 +579,10 @@ PrefabInstance:
     - target: {fileID: 1227139360504606460, guid: 2bd5cdeaf2fe0a74b81fddd8f8549ee3, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3390957878676215926, guid: 2bd5cdeaf2fe0a74b81fddd8f8549ee3, type: 3}
+      propertyPath: m_Interpolate
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8252502462426285606, guid: 2bd5cdeaf2fe0a74b81fddd8f8549ee3, type: 3}
       propertyPath: speed
@@ -1011,7 +1020,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 864643453216137310, guid: b2aec903fa9d8c94ab87c5c0e521bc2a, type: 3}
       propertyPath: m_Name
-      value: Camera
+      value: FirstPlayerCamera
       objectReference: {fileID: 0}
     - target: {fileID: 971333690056769039, guid: b2aec903fa9d8c94ab87c5c0e521bc2a, type: 3}
       propertyPath: m_LocalScale.x
@@ -1060,6 +1069,22 @@ PrefabInstance:
     - target: {fileID: 971333690056769039, guid: b2aec903fa9d8c94ab87c5c0e521bc2a, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4007183487142819035, guid: b2aec903fa9d8c94ab87c5c0e521bc2a, type: 3}
+      propertyPath: orthographic size
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 4007183487142819035, guid: b2aec903fa9d8c94ab87c5c0e521bc2a, type: 3}
+      propertyPath: m_CullingMask.m_Bits
+      value: 4294967295
+      objectReference: {fileID: 0}
+    - target: {fileID: 4134144113212345015, guid: b2aec903fa9d8c94ab87c5c0e521bc2a, type: 3}
+      propertyPath: targetPlayer
+      value: 
+      objectReference: {fileID: 307143601}
+    - target: {fileID: 4134144113212345015, guid: b2aec903fa9d8c94ab87c5c0e521bc2a, type: 3}
+      propertyPath: viewportRect.width
+      value: 0.495
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
