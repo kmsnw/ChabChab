@@ -44,8 +44,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5ac714009bbe72842963270b5ccb3dfc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _boundary: {fileID: 7252095078018583488, guid: 9c0c247300cf3a548981f250bf220fd6, type: 3}
-  boundaryOffset: 1
-  nextSceneName: Stage1
+  screenFader: {fileID: 0}
+  fadeDuration: 0.5
+  initialWideViewDuration: 2
+  cinematicCameraZDepth: -10
+  cameraSplit1: {fileID: 0}
+  cameraSplit2: {fileID: 0}
+  cameraCinematic: {fileID: 0}
+  cutsceneDuration: 2
+  nextStorySceneName: CutScene3
+  cinematicCameraMover: {fileID: 0}
+  doorExitTransform: {fileID: 0}
+  _boundaryPrefab: {fileID: 7252095078018583488, guid: 9c0c247300cf3a548981f250bf220fd6, type: 3}
+  boundaryOffset: 1.5
   button1: {fileID: 0}
   button2: {fileID: 0}
