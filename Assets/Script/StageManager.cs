@@ -39,9 +39,6 @@ public class StageManager : MonoBehaviour
     //플레이어
     private PlayerController[] _players;
 
-    //카메라
-    private CameraController _camera;
-    
     
     private void CheckStageClear()
     {
@@ -191,13 +188,6 @@ public class StageManager : MonoBehaviour
         
         _players = FindObjectsOfType<PlayerController>();
      
-        _camera = FindObjectOfType<CameraController>();
-
-        if (_camera == null)
-        {
-            Debug.LogError("CameraController 누락");
-        }
-        
         
         if (button1 == null || button2 == null)
         {
@@ -210,8 +200,7 @@ public class StageManager : MonoBehaviour
         //매 프레임 버튼 태그 확인
         CheckStageClear();
         
-        _camera.SetTargetPosition(SetCameraPosition());
-
+        
         
     }
 

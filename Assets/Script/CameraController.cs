@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -7,6 +8,8 @@ using UnityEngine;
 
 public class CameraController : MonoBehaviour
 {
+    public Transform targetPlayer;
+    
     //카메라 이동 속도
     [SerializeField] 
     private float moveSpeed = 5f;
@@ -14,16 +17,37 @@ public class CameraController : MonoBehaviour
     //이동할 위치
     private Vector3 _targetPosition;
 
+    [Header("Viewport")]
+    public Rect viewportRect = new Rect(0f, 0f, 0.5f, 1f);
+    public Vector3 offset = new Vector3(0f, 0f, -10f);
+    
+    private Camera _camera;
 
-    //StageManager에서 호출
-    public void SetTargetPosition(Vector3 targetPosition)
+
+    private void Start()
     {
-        _targetPosition = targetPosition;
+        _camera = GetComponent<Camera>();
+
+        if (targetPlayer == null)
+        {
+            Debug.LogError("No target player found");
+            enabled = false;
+            return;
+        }
+        
+        _camera.rect = viewportRect;
     }
+
+    
+    
+    //StageManager에서 호출
+
 
     //LateUpdate 이용 선형보간
     private void LateUpdate()
     {
+        
+        _targetPosition = targetPlayer.position + offset;
         Vector3 smoothedPosition = Vector3.Lerp(transform.position, _targetPosition, Time.deltaTime * moveSpeed);
         transform.position = smoothedPosition;
     }
