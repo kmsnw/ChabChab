@@ -16,6 +16,10 @@ public class PlayerInput : MonoBehaviour
     public KeyCode right;
     public KeyCode left;
     public KeyCode interactKey;
+    public KeyCode jumpKey;
+    
+    
+    public bool JumpKeyDown { get; private set; }
     
     
     void Update()
@@ -24,5 +28,8 @@ public class PlayerInput : MonoBehaviour
         _horizontalInput = 0;
         if (Input.GetKey(right)) _horizontalInput = 1f;
         if (Input.GetKey(left)) _horizontalInput = -1f;
+        
+        JumpKeyDown = Input.GetKey(jumpKey);
+        
     }
 }

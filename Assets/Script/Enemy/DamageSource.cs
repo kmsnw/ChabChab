@@ -8,16 +8,21 @@ using UnityEngine;
 public class DamageSource : MonoBehaviour
 {
     [Header("Damage")]
-    public int damageValue = 0;
+    public int damageValue = 10;
 
     protected virtual void OnTriggerStay2D(Collider2D other)
     {
-        CharacterHealth healthComp = other.GetComponent<CharacterHealth>();
-
-        if (healthComp != null)
+        if (other.tag == "Player")
         {
-            healthComp.TakeDamage(damageValue);
+            CharacterHealth healthComp = other.GetComponent<CharacterHealth>();
+
+            if (healthComp != null)
+            {
+                healthComp.TakeDamage(damageValue);
+            }
+            
         }
+        
         
     }
     

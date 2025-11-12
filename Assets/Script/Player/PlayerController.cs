@@ -19,7 +19,9 @@ public class PlayerController : MonoBehaviour
     private bool _currentInteractState = false;
     private bool _lastInteractingState = false;
     
+    private Animator _animator;
     
+
 
     private void OnTriggerEnter2D(Collider2D other)
     {
@@ -39,6 +41,7 @@ public class PlayerController : MonoBehaviour
 
     void Start()
     {
+        _animator = GetComponent<Animator>();
         _playerInput = GetComponent<PlayerInput>();
         _movement = GetComponent<CharacterMovement>();
         
@@ -53,6 +56,11 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
+        
+        if (_playerInput.JumpKeyDown)
+        {
+            _movement.Jump();
+        }
         //상호작용 키 누름 -> true
         _currentInteractState = Input.GetKey(_playerInput.interactKey);
 
