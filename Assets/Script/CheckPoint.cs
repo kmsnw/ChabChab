@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;using Unity.VisualScripting;
 using UnityEditor.SceneManagement;
@@ -13,30 +14,37 @@ public class CheckPoint : MonoBehaviour
     
     private StageManager _stageManager;
 
-    [SerializeField]
-    private int playersInZone = 0; //체크포인트에 트리거된 플레이어 수
+    private List<PlayerController> playersInZone = new List<PlayerController>();
     
+    // [SerializeField]
+    // private int playersInZone = 0; //체크포인트에 트리거된 플레이어 수
+    //
     private void OnTriggerEnter2D(Collider2D other)
     {
-        
-        if (other.GetComponent<PlayerController>() != null)
+        PlayerController player = other.GetComponent<PlayerController>();
+
+        if (player != null)
         {
-            playersInZone++;
+            if(playersInZone.Contains(player)) return;
             
-            if(playersInZone == 2)
-                _stageManager.SetCurrentCheckPoint(this); //체크포인트 갱신
+            playersInZone.Add(player);
+
+            if (playersInZone.Count == 2) _stageManager.SetCurrentCheckPoint(this);
         }
     }
 
     private void OnTriggerExit2D(Collider2D other)
     {
-        if (other.GetComponent<PlayerController>() != null)
+        PlayerController player = other.GetComponent<PlayerController>();
+
+        if (player != null)
         {
-            if (playersInZone > 0)
+            if (playersInZone.Contains(player))
             {
-                playersInZone--;
+                playersInZone.Remove(player);
             }
         }
+        
     }
 
     void Start()
@@ -49,6 +57,10 @@ public class CheckPoint : MonoBehaviour
             enabled = false;
         }
     }
-    
+
+    void Update()
+    {
+        Debug.Log("playerinzone: " + playersInZone);    
+    }
 }
 

@@ -20,8 +20,12 @@ public class PlayerController : MonoBehaviour
     private bool _lastInteractingState = false;
     
     private Animator _animator;
-    
 
+    void Awake()
+    {
+        _playerInput = GetComponent<PlayerInput>();
+        _movement = GetComponent<CharacterMovement>();
+    }
 
     private void OnTriggerEnter2D(Collider2D other)
     {
@@ -41,9 +45,6 @@ public class PlayerController : MonoBehaviour
 
     void Start()
     {
-        _animator = GetComponent<Animator>();
-        _playerInput = GetComponent<PlayerInput>();
-        _movement = GetComponent<CharacterMovement>();
         
     }
 
@@ -52,6 +53,9 @@ public class PlayerController : MonoBehaviour
     {
         //horizontal 값 기반 이동함수(좌우) 프레임마다 호출
         _movement.Move(_playerInput.HorizontalInput);
+        
+        //벽 붙기..
+        _movement.HandleWallCling(_playerInput.IsInteracting);
     }
 
     void Update()
@@ -59,10 +63,10 @@ public class PlayerController : MonoBehaviour
         
         if (_playerInput.JumpKeyDown)
         {
-            _movement.Jump();
+            _movement.Jump(_playerInput.JumpKeyDown);
         }
         //상호작용 키 누름 -> true
-        _currentInteractState = Input.GetKey(_playerInput.interactKey);
+        _currentInteractState = _playerInput.IsInteracting;
 
         //최적화: 상호작용 시작(키 눌렀을 때), 종료(땠을 때) 에만 Interact 함수 호출
         if (_currentInteractState != _lastInteractingState)

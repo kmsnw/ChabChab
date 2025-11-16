@@ -3,6 +3,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+//클리어 컷신시 카메라 이동관련..
+//target pos(출구 문)으로 부드럽게 이동하며 확대
+
 public class CutsceneCameraMover : MonoBehaviour
 {
     

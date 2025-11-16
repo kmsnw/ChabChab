@@ -11,6 +11,7 @@ public interface IInteractable
     //isInteracting(상호작용 여부)에 따른 동작 구현
     void Interact(bool isInteracting, PlayerController player);
     
+    
     //상호작용 대상 이름정보 -> 피드백, 디버깅, 시각 표현..
     string InteractionName { get; }
     

@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+//Fade 연출(화면 검은색 투명도 조절해 부드럽게 넘어가는 연출..)
+//Fade 위한 메서드 제공
+
 public class ScreenFader : MonoBehaviour
 {
 // 페이드 패널 자체의 Image 컴포넌트 참조 (Awake에서 자동 획득 가능)
@@ -14,13 +17,15 @@ public class ScreenFader : MonoBehaviour
         if (fadeImage == null)
         {
             fadeImage = GetComponent<Image>();
+            //fade 이미지
         }
         if (fadeImage == null)
         {
-            Debug.LogError("ScreenFader: Image 컴포넌트가 부착되어 있어야 합니다.");
+            Debug.LogError("ScreenFader: not found fade image");
         }
     }
     
+    //fade 진행
     public IEnumerator FadeScreen(float targetAlpha, float duration)
     {
         if (fadeImage == null) yield break;
@@ -33,10 +38,9 @@ public class ScreenFader : MonoBehaviour
         while (time < duration)
         {
             time += Time.deltaTime;
-            float t = time / duration;
-            
-            fadeImage.color = Color.Lerp(startColor, targetColor, t);
-            yield return null;
+            float t = time / duration; //진행률. t는 0~1. 
+            fadeImage.color = Color.Lerp(startColor, targetColor, t); //투명도 차이 선형보간
+            yield return null; //루프를 일시 중지. 현 프레임 나머지 렌더링 수행
         }
         
         fadeImage.color = targetColor;

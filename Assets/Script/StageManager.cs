@@ -7,7 +7,7 @@ using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 //스테이지 관리자
-//클리어 판정, 씬 전환, 오브젝트 죽음 처리 관련 등..
+//클리어 판정, 씬 전환 및 연출, 죽음 처리..
 
 
 public class StageManager : MonoBehaviour
@@ -85,72 +85,9 @@ public class StageManager : MonoBehaviour
         StartCoroutine(StageClearFlowCoroutine());
         
     }
-
-    private IEnumerator StageClearFlowCoroutine()
-    {
-        // === 1단계: 🖤 페이드 인 (화면 전환 은폐) ===
-        // BlackFadePanel을 반드시 StageManager에 연결해야 합니다.
-        yield return StartCoroutine(screenFader.FadeScreen(1f, fadeDuration)); 
     
-        // 1. 플레이어 입력 정지 (선택 사항)
-        // PlayerInput.DisableAll(); 
     
-        // 2. 중앙 위치 계산 (Z값 고정 포함)
-        Vector3 centerPoint = Vector3.zero;
-        centerPoint = (_players[0].transform.position + _players[1].transform.position) / 2f;
-        
-    
-        // === 2단계: 🔄 카메라 전환 및 위치 설정 ===
-        cameraSplit1.SetActive(false);
-        cameraSplit2.SetActive(false);
-
-        if (cameraCinematic != null)
-        {
-            // X, Y는 플레이어 중앙으로, Z는 미리 정의된 깊이로 설정
-            cameraCinematic.transform.position = new Vector3(
-                centerPoint.x, 
-                centerPoint.y, 
-                cinematicCameraZDepth 
-            );
-            cameraCinematic.SetActive(true); // 컷신 카메라 활성화
-        }
-    
-        // === 3단계: 🎥 연출 시작 및 페이드 아웃 ===
-        // 검은 화면에서 컷신 카메라 시점 공개
-        yield return StartCoroutine(screenFader.FadeScreen(0f, fadeDuration)); 
-
-        // 문 이동 연출 시작
-        float cameraMoveTime = cutsceneDuration / 2f; // 총 컷신 시간의 절반을 카메라 이동에 사용
-    
-        if (cinematicCameraMover != null && doorExitTransform != null)
-        {
-            cinematicCameraMover.MoveToDoor(doorExitTransform, cameraMoveTime);
-        }
-    
-        // 카메라 이동 시간 동안 대기
-        yield return new WaitForSeconds(cameraMoveTime);
-    
-        // === 4단계: 🚪 문 애니메이션 대기 ===
-    
-        float doorOpenAnimationTime = 2f; // 문 열림 애니메이션 시간 가정
-    
-        // 문 열림 애니메이션 시작 (DoorController...)
-        // exitDoor.OpenDoor(); 
-
-        // 애니메이션 시간 동안 대기
-        yield return new WaitForSeconds(doorOpenAnimationTime);
-    
-        // === 5단계: 💡 최종 종료 및 씬 전환 ===
-        // 다시 검은 화면으로 전환 (씬 로드를 숨김)
-        yield return StartCoroutine(screenFader.FadeScreen(1f, fadeDuration)); 
-    
-        // 다음 씬으로 전환
-        SceneManager.LoadScene(nextStorySceneName);
-    }
-
-
-    
-    //오브젝트 죽음 괸리(캐릭터, 몬스터...)
+    //오브젝트 죽음 괸리(플레이어, 몬스터...)
     public void objectDeath(GameObject deadObject)
     {
         //플레이어 사망
@@ -165,6 +102,11 @@ public class StageManager : MonoBehaviour
 
     public void SetCurrentCheckPoint(CheckPoint newCheckPoint)
     {
+        if (_currentCheckPoint == newCheckPoint)
+        {
+            return;
+        }
+        
         
         Debug.Log("체크포인트 갱신");
         _currentCheckPoint = newCheckPoint;
@@ -254,35 +196,19 @@ public class StageManager : MonoBehaviour
         }
     }
 
-    // //플레이어 위치 기반 카메라가 이동할 위치 산출
-    // //x축 기준 더 뒤에 있는 플레이어 위치를 기반 -> 대안: 두 플레이어 평균?
-    // public Vector3 SetCameraPosition()
-    // {
-    //     Transform focusTarget = (_players[0].transform.position.x < _players[1].transform.position.x)
-    //         ? _players[0].transform
-    //         : _players[1].transform;
-    //
-    //     Vector3 offset = new Vector3(2f, 0f, -10f);
-    //
-    //     Vector3 targetPosition = focusTarget.position + offset;
-    //     targetPosition.y = (_players[0].transform.position.y + _players[1].transform.position.y) / 2f;
-    //
-    //     return targetPosition;
-    // }
     
+    // 씬 시작 연출
     private IEnumerator StartSceneFlowCoroutine()
     {
         _players[0].enabled = false;
         _players[1].enabled = false;
-        // 1. 🖤 페이드 인 (화면을 검게 만든 상태에서 시작)
-        // 씬 로드 시 이미 검은 화면(Fade In)이 완료되어 있다고 가정하고 시작합니다.
-        // 만약 씬 전환 시 페이드 아웃 로직을 넣지 않았다면, StartCoroutine(FadeScreen(1f, 0f));을 추가하세요.
-
-        // 2. 🎥 시네마틱 카메라 초기 설정
+        
+        
+        //시네마틱 카메라 설정
         // 두 플레이어 중앙 위치 계산
         Vector3 centerPoint = (_players[0].transform.position + _players[1].transform.position) / 2f;
     
-        // 컷신 카메라 위치 설정 (넓은 시야를 위해 ZDepth를 조정하거나, OrthoSize를 크게 설정)
+        // 컷신 카메라 위치 설정 (넓은 시야를 위해 ZDepth 조정 or OrthoSize 크게)
         if (cameraCinematic != null)
         {
             cameraCinematic.transform.position = new Vector3(centerPoint.x, centerPoint.y, cinematicCameraZDepth);
@@ -292,36 +218,98 @@ public class StageManager : MonoBehaviour
             cameraCinematic.SetActive(true);
         }
     
-        // 3. 분할 카메라 비활성화
+        //분할 카메라 비활성
         cameraSplit1.SetActive(false);
         cameraSplit2.SetActive(false);
     
-        // 4. 💡 넓은 화면 공개 (페이드 아웃)
+        //페이드 아웃
         yield return StartCoroutine(screenFader.FadeScreen(0f, fadeDuration)); 
     
-        // 5. 넓은 화면 보여주기 (1~2초간 멈춤 상태)
+        // 넓은 화면 보여주기 (duration만큼 대기)
         yield return new WaitForSeconds(initialWideViewDuration); 
     
-        // 6. 🖤 페이드 인 (다시 검은 화면으로 전환)
+        // 페이드 인 -> 다시 검은 화면으로 전환
         yield return StartCoroutine(screenFader.FadeScreen(1f, fadeDuration)); 
 
-        // 7. 🔄 분할 카메라로 복귀 및 컷신 카메라 정리
+        // 분할 카메라로 복귀 및 컷신 카메라 정리
         cameraCinematic.SetActive(false);
     
-        // 분할 화면 카메라의 Viewport Rect 설정을 Start()에서 이미 했으므로, 활성화만 합니다.
+        //분할 카메라 활성화
         cameraSplit1.SetActive(true);
         cameraSplit2.SetActive(true);
     
-        // 8. 💡 화면 공개 및 게임 시작
+        // 화면 공개(게임시작)
         yield return StartCoroutine(screenFader.FadeScreen(0f, fadeDuration)); 
     
-        // 9. 플레이어 입력 활성화 및 AI 시작
-        // PlayerInput.EnableAll(); // (별도 구현 필요)
+        // 플레이어 입력 활성화? 막아둘까
+        // PlayerInput.EnableAll(); 
         
         _players[0].enabled = true;
         _players[1].enabled = true;
     
-        Debug.Log("Game Start: Split-Screen Mode");
+        Debug.Log("Game Start: Split-Screen");
+    }
+    
+    //스테이지 클리어 연출
+    private IEnumerator StageClearFlowCoroutine()
+    {
+        //페이드 인
+        yield return StartCoroutine(screenFader.FadeScreen(1f, fadeDuration)); 
+    
+        // 컷신 중 플레이어 입력 정지. 필요하면..
+        // PlayerInput.DisableAll(); 
+    
+        // 플레이어 중앙 위치
+        Vector3 centerPoint = Vector3.zero;
+        centerPoint = (_players[0].transform.position + _players[1].transform.position) / 2f;
+        
+        
+        
+        //분할 카메라 2개 비활성화
+        cameraSplit1.SetActive(false);
+        cameraSplit2.SetActive(false);
+
+        //==연출용 카메라 설정==
+        //플레이어 중앙 위치로부터 -> 문쪽으로 이동하며 확대 -> 문열리는 애니메이션..
+        if (cameraCinematic != null)
+        {
+            cameraCinematic.transform.position = new Vector3(
+                centerPoint.x, 
+                centerPoint.y, 
+                cinematicCameraZDepth 
+            );
+            cameraCinematic.SetActive(true); // 컷신 카메라 활성화
+        }
+    
+        // ==연출 시작 및 페이드 아웃==
+        // 검은 화면에서 컷신 카메라 시점 공개
+        yield return StartCoroutine(screenFader.FadeScreen(0f, fadeDuration)); 
+
+        // ==문 이동 연출==
+        float cameraMoveTime = cutsceneDuration / 2f; // 총 컷신 시간의 절반을 카메라 이동에 사용
+    
+        if (cinematicCameraMover != null && doorExitTransform != null)
+        {
+            cinematicCameraMover.MoveToDoor(doorExitTransform, cameraMoveTime); //target pos, 이동시간
+        }
+    
+        // 카메라 이동 시간 동안 대기
+        yield return new WaitForSeconds(cameraMoveTime);
+    
+        // ==문 애니메이션 대기== 
+    
+        float doorOpenAnimationTime = 2f; // 문 열림 애니메이션 시간 가정
+    
+        // 문 열림 애니메이션 시작 (DoorController.cs..)
+        // exitDoor.OpenDoor(); 
+
+        // 애니메이션 시간 동안 대기
+        yield return new WaitForSeconds(doorOpenAnimationTime);
+    
+        //==페이드 인 및 다음 씬 전환
+        yield return StartCoroutine(screenFader.FadeScreen(1f, fadeDuration)); 
+    
+        SceneManager.LoadScene(nextStorySceneName);
     }
     
 
@@ -346,7 +334,7 @@ public class StageManager : MonoBehaviour
             cameraSplit2.SetActive(false);
         }
     
-        // 2. 씬 시작 연출 플로우 시작
+        // start 씬 시작 연출 
         StartCoroutine(StartSceneFlowCoroutine());
     }
     void Update()
@@ -356,12 +344,6 @@ public class StageManager : MonoBehaviour
         
         
         
-    }
-
-    private void LateUpdate()
-    {
-   
-          
     }
 
 }

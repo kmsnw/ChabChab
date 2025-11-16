@@ -7,29 +7,27 @@ using UnityEngine;
 
 public class PlayerInput : MonoBehaviour
 {
+    
+    public KeyCode jumpKey = KeyCode.W;          // P1: W, P2: UpArrow
+    public KeyCode interactKey = KeyCode.S;     // P1: S, P2: DownArrow
+    public KeyCode leftKey = KeyCode.A;          // P1: A, P2: LeftArrow
+    public KeyCode rightKey = KeyCode.D;         // P1: D, P2: RightArrow
 
+    public float HorizontalInput { get; private set; }
+    public bool JumpKeyDown { get; private set; } 
+    public bool IsInteracting { get; private set; } // S / DownArrow 상태
 
-    private float _horizontalInput = 0f;
-    public float HorizontalInput {get {return _horizontalInput;}}
-    
-    //각 플레이어별 조작키 설정 -> 변경, 확장 가능..
-    public KeyCode right;
-    public KeyCode left;
-    public KeyCode interactKey;
-    public KeyCode jumpKey;
-    
-    
-    public bool JumpKeyDown { get; private set; }
-    
-    
     void Update()
     {
-        //좌, 우 입력기반 수평 방향 값 산출
-        _horizontalInput = 0;
-        if (Input.GetKey(right)) _horizontalInput = 1f;
-        if (Input.GetKey(left)) _horizontalInput = -1f;
+        // 수평 입력 처리
+        HorizontalInput = 0;
+        if (Input.GetKey(rightKey)) HorizontalInput = 1f;
+        if (Input.GetKey(leftKey)) HorizontalInput = -1f;
+
+        // 단발성 입력 (점프)
+        JumpKeyDown = Input.GetKeyDown(jumpKey);
         
-        JumpKeyDown = Input.GetKey(jumpKey);
-        
+        // 지속성 입력 (상호작용/벽잡기)
+        IsInteracting = Input.GetKey(interactKey);
     }
 }

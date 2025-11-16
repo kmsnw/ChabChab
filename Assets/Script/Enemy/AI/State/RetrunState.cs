@@ -25,11 +25,11 @@ namespace AI.FSM
 
         public void Execute()
         {
-            // 1. 목표 지점 방향으로 이동 결정
+            // 목표 지점 방향으로 이동 결정
             float directionToStart = Mathf.Sign(destination.x - owner.transform.position.x);
             owner.currentMoveDirection = directionToStart;
             
-            // 2. 복귀 완료 조건 체크
+            // 복귀 완료 조건 체크
             // X축 위치기반 복귀 여부 체크
             if (Mathf.Abs(owner.transform.position.x - destination.x) < 0.1f)
             {

@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 
 //타이틀 씬 관리
+
 public class TitleSceneManager : MonoBehaviour
 {
     [Header("UI Buttons")] 
@@ -28,14 +29,14 @@ public class TitleSceneManager : MonoBehaviour
         StartCoroutine(TransitionToGameScene());
     }
     
-    // 씬 전환 및 페이드 처리를 담당하는 코루틴
+    // 씬 전환 및 페이드 처리 담당 코루틴
     private IEnumerator TransitionToGameScene()
     {
         isTransitioning = true;
         
         startButton.SetActive(false);
         
-        // 1. 🖤 페이드 인: 화면을 검게 만들어 씬 전환을 숨깁니다.
+        //페이드인
         // ScreenFader 객체를 통해 FadeScreen 코루틴 호출
         if (screenFader != null)
         {
@@ -43,10 +44,10 @@ public class TitleSceneManager : MonoBehaviour
         }
         else
         {
-            Debug.LogError("ScreenFader가 연결되지 않아 페이드 없이 전환됩니다.");
+            Debug.LogError("not connected ScreenFader");
         }
         
-        // 2. 씬 전환 (검은 화면 상태에서 진행)
+        // 씬 전환 (검은 화면 상태에서 진행)
         SceneManager.LoadScene(gameSceneName);
     }
     //게임종료
