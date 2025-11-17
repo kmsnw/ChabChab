@@ -9,8 +9,11 @@ public class TitleSceneManager : MonoBehaviour
 {
     [Header("UI Buttons")] 
     public GameObject startButton;
-    
-    
+    public GameObject howtoButton;
+    public GameObject exitButton;
+    public GameObject howToPanel;
+
+
     [Header("Fade Settings")]
     public ScreenFader screenFader; 
     public float fadeDuration = 0.5f;
@@ -50,9 +53,24 @@ public class TitleSceneManager : MonoBehaviour
         // 씬 전환 (검은 화면 상태에서 진행)
         SceneManager.LoadScene(gameSceneName);
     }
+
+    //HowTo 열기
+    public void OpenHowTo()
+    {
+        howToPanel.SetActive(true);
+    }
+
+    //뒤로가기 (HowTo 닫기)
+    public void CloseHowTo()
+    {
+        howToPanel.SetActive(false);
+    }
+
+
     //게임종료
     public void QuitGame()
     {
-        
+        Application.Quit();
+        Debug.Log("게임 종료");
     }
 }
