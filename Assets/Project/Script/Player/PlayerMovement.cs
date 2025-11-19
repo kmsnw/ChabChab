@@ -38,6 +38,16 @@ public class PlayerMovement : MonoBehaviour
     [Header("Collision Layers")]
     public LayerMask platformLayer; // "Platform" 레이어 (벽/땅 감지)
     
+    
+    [Header("Gravity Reverse Effect")]
+    public float rotationSpeed = 360f; // 초당 회전 각도 (예: 1초에 360도)
+    private Quaternion targetRotation; // 목표 회전값
+    private bool isRotating = false; // 현재 회전 중인지 여부
+    public float liftTime = 0.5f;        // 캐릭터가 서서히 뜰 시간
+    public float liftHeight = 0.5f;      // 캐릭터가 뜰 높이
+    public float inputLockDuration = 1.0f; // 입력 잠금 유지 시간 (회전 시간 포함)
+    private bool isControlLocked = false;
+    
     // --- 상태 ---
     public bool isWallClinging { get; private set; } = false; // 벽 잡기 상태
     private bool canWallCling = true;
@@ -55,11 +65,14 @@ public class PlayerMovement : MonoBehaviour
     private const string ANIM_IS_DOUBLEJUMP = "isDoubleJump";
     public const string ANIM_IS_GRAVITYREVERSED = "isGravityReversed";
     
+    
+
+    
     void Start()
     {
-        // _audioSource = GetComponent<AudioSource>();
-        // if(_audioSource == null) Debug.LogError("CharacterMovement: audio not found");
-        //
+        _audioSource = GetComponent<AudioSource>();
+        if(_audioSource == null) Debug.LogError("CharacterMovement: audio not found");
+        
         
         // _groundCheckRay = GetComponent<groundCheckRay>();
         // if(_groundCheckRay == null) Debug.LogError("Ground Check Ray is null");
@@ -142,6 +155,23 @@ public class PlayerMovement : MonoBehaviour
             
         }
         
+        if (isRotating)
+        {
+            // Lerp 또는 Slerp로 부드럽게 회전
+            transform.rotation = Quaternion.RotateTowards(
+                transform.rotation, 
+                targetRotation, 
+                rotationSpeed * Time.deltaTime
+            );
+
+            // 목표 회전에 거의 도달하면 회전 중지
+            if (Quaternion.Angle(transform.rotation, targetRotation) < 0.1f)
+            {
+                transform.rotation = targetRotation; // 정확히 목표 각도로 설정
+                isRotating = false; // 회전 종료
+            }
+        }
+        
     }
 
     void FixedUpdate()
@@ -150,21 +180,7 @@ public class PlayerMovement : MonoBehaviour
         {
             inputDenialTimer -= Time.fixedDeltaTime;
         }
-        
-        //지면 감지시(by rayCast) falling 애니메이션 종료
-        // if (_rigidBody.velocity.y <= 0)
-        // {
-        //     Vector2 rayOrigin = (Vector2)_rigidBody.position + Vector2.down * 0.5f;
-        //     RaycastHit2D rayHit = Physics2D.Raycast(
-        //         rayOrigin, Vector2.down, 
-        //         0.6f, 
-        //         platformLayer
-        //     );
-        //
-        //     // 지면에 닿았을 때 점프 애니메이션 종료
-        //     if (rayHit.collider != null && rayHit.collider != _charCollider && rayHit.distance < 0.5f)
-        //         _animator.SetBool(ANIM_IS_FALLING, false);
-        // }
+
         // ----------------------------------------------------
         
         //걷기 애니메이션..
@@ -195,6 +211,7 @@ public class PlayerMovement : MonoBehaviour
     {
         if (!isJumpInput) return;
 
+        bool jumpSuccessful = false;
         // Debug.Log("wallJump");
         
         //일반 점프 
@@ -205,6 +222,8 @@ public class PlayerMovement : MonoBehaviour
             rigidBody.AddForce(Vector2.up * jumpPower * gravityValue, ForceMode2D.Impulse);
             animator.SetBool(ANIM_IS_JUMPING, true);
             animator.SetBool(ANIM_IS_FALLING, false);
+            
+            jumpSuccessful = true;
         }
         //벽 점프
         else if (isWallClinging)
@@ -219,12 +238,12 @@ public class PlayerMovement : MonoBehaviour
             //벽점프 무시 타이머 설정
             inputDenialTimer = wallJumpInputDenialTime;
             
-            //벽점프 애니메이션 -> 지금은 그냥 점프?..
-            animator.SetBool(ANIM_IS_JUMPING, true);
-            animator.SetBool(ANIM_IS_FALLING, false);
+            // //벽점프 애니메이션 -> 지금은 그냥 점프?..
+            // animator.SetBool(ANIM_IS_JUMPING, true);
+            // animator.SetBool(ANIM_IS_FALLING, false);
             //_animator.SetBool(ANIM_IS_JUMPING, true);
             animator.SetTrigger("WallJumpTrigger");
-            animator.SetBool(ANIM_IS_FALLING, false);
+            //animator.SetBool(ANIM_IS_FALLING, false);
 
             //벽 잡기 상태 해제
             isWallClinging = false;
@@ -233,6 +252,8 @@ public class PlayerMovement : MonoBehaviour
             animator.SetBool(ANIM_IS_WALLCLING, false); 
             
             canWallCling = false;
+            
+            jumpSuccessful = true;
         }
         //더블 점프(아이템 습득)
         else if (isDoubleJump)
@@ -246,14 +267,15 @@ public class PlayerMovement : MonoBehaviour
             Debug.Log("더블점프 state change");
             animator.SetBool(ANIM_IS_DOUBLEJUMP, false);
             isDoubleJump = false;
+            
+            jumpSuccessful = true;
         }
-        
-        
-        //사운드..
-        // if (_audioSource != null && jumpSound != null)
-        // {
-        //     _audioSource.PlayOneShot(jumpSound);
-        // }
+
+        if (jumpSuccessful)
+        {
+            _audioSource.PlayOneShot(jumpSound);
+        }
+
     }
     
     public void HandleWallCling(bool isClingInput)
@@ -274,12 +296,25 @@ public class PlayerMovement : MonoBehaviour
         // 벽 잡기 조건: 입력 키가 눌림, 벽에 닿음, 땅에 닿지 않음
         if (isClingInput && (isTouchingWallLeft || isTouchingWallRight) && !CheckIfGrounded())
         {
+            // if (gravityValue < 0f)
+            // {
+            //     _spriteRenderer.flipX = false;
+            // }
+
             // Debug.Log("벽 잡기");
             //속도 및 중력 제어(0)
             rigidBody.velocity = Vector2.zero;
             rigidBody.gravityScale = 0;
             
             isWallClinging = true;
+            
+            bool shouldFlip = isTouchingWallLeft;
+            if (gravityValue < 0f)
+            {
+                shouldFlip = !shouldFlip;
+            }
+            _spriteRenderer.flipX = shouldFlip;
+            
             
             //벽 잡기 애니메이션..
             animator.SetBool(ANIM_IS_WALLCLING, true);
@@ -294,6 +329,12 @@ public class PlayerMovement : MonoBehaviour
             rigidBody.gravityScale = gravityValue;
             isWallClinging = false;
             animator.SetBool(ANIM_IS_WALLCLING, false);
+            
+            // if (gravityValue < 0f)
+            // {
+            //     _spriteRenderer.flipX = true;
+            // }
+            
         }
     }
     
@@ -360,5 +401,53 @@ public class PlayerMovement : MonoBehaviour
     { 
         if (horizontalInput > 0) _spriteRenderer.flipX = false;
         else if (horizontalInput < 0) _spriteRenderer.flipX = true;
+    }
+    
+    
+    public Coroutine ReverseGravityEffectCo()
+    {
+        // 이미 연출 중이면 중복 방지
+        if (isControlLocked) return null; 
+
+        // 모든 제어를 멈추고 연출 코루틴 시작
+        return StartCoroutine(ReverseGravityFlow());
+    }
+    
+    //중력반전 연출
+    private IEnumerator ReverseGravityFlow()
+    {
+        isControlLocked = true;
+    
+        rigidBody.velocity = Vector2.zero; 
+
+    
+        rigidBody.gravityScale = 0; 
+    
+        // 서서히 뜨는 연출 (liftTime 동안)
+        float verticalDirection = Mathf.Sign(gravityValue); 
+
+        Vector3 startPos = transform.position; 
+        
+        Vector3 endPos = startPos + new Vector3(0, liftHeight * verticalDirection, 0); 
+        float elapsed = 0f;
+
+        while (elapsed < liftTime)
+        {
+            transform.position = Vector3.Lerp(startPos, endPos, elapsed / liftTime);
+            elapsed += Time.deltaTime;
+            yield return null;
+        }
+        transform.position = endPos;
+        
+        // 목표 회전 설정 (180도 or 0도)
+        targetRotation = (gravityValue < 0) ? Quaternion.Euler(0, 0, 180) : Quaternion.Euler(0, 0, 0);
+        isRotating = true; 
+    
+        
+        // 회전이 완료될 때까지 대기
+        yield return new WaitForSeconds(inputLockDuration); 
+    
+        // 조작 활성화
+        isControlLocked = false;
     }
 }

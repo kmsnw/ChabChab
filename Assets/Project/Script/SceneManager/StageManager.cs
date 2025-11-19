@@ -30,9 +30,8 @@ public class StageManager : MonoBehaviour
     public string nextStorySceneName;
     
     public CutsceneCameraMover cinematicCameraMover;
-    public Transform doorExitTransform;
-    
-    
+    public GameObject ClearDoor;
+    private Animator _doorAnimator;
     
     //최신 체크포인트
     private CheckPoint _currentCheckPoint;
@@ -59,6 +58,10 @@ public class StageManager : MonoBehaviour
     //플레이어
     private PlayerController[] _players;
 
+    
+    //사운드
+    private AudioSource _backGroundSound;
+    
     
     private void CheckStageClear()
     {
@@ -247,12 +250,14 @@ public class StageManager : MonoBehaviour
         _players[0].enabled = true;
         _players[1].enabled = true;
     
+        _backGroundSound.Play();
         Debug.Log("Game Start: Split-Screen");
     }
     
     //스테이지 클리어 연출
     private IEnumerator StageClearFlowCoroutine()
     {
+        _backGroundSound.Stop();
         //페이드 인
         yield return StartCoroutine(screenFader.FadeScreen(1f, fadeDuration)); 
     
@@ -288,9 +293,9 @@ public class StageManager : MonoBehaviour
         // ==문 이동 연출==
         float cameraMoveTime = cutsceneDuration / 2f; // 총 컷신 시간의 절반을 카메라 이동에 사용
     
-        if (cinematicCameraMover != null && doorExitTransform != null)
+        if (cinematicCameraMover != null && ClearDoor != null)
         {
-            cinematicCameraMover.MoveToDoor(doorExitTransform, cameraMoveTime); //target pos, 이동시간
+            cinematicCameraMover.MoveToDoor(ClearDoor.transform, cameraMoveTime); //target pos, 이동시간
         }
     
         // 카메라 이동 시간 동안 대기
@@ -298,10 +303,12 @@ public class StageManager : MonoBehaviour
     
         // ==문 애니메이션 대기== 
     
-        float doorOpenAnimationTime = 2f; // 문 열림 애니메이션 시간 가정
+        float doorOpenAnimationTime = 5f; // 문 열림 애니메이션 시간 가정
     
         // 문 열림 애니메이션 시작 (DoorController.cs..)
         // exitDoor.OpenDoor(); 
+        _doorAnimator.SetBool("openDoor", true);
+        _doorAnimator.SetBool("startParticle", true);
 
         // 애니메이션 시간 동안 대기
         yield return new WaitForSeconds(doorOpenAnimationTime);
@@ -312,9 +319,14 @@ public class StageManager : MonoBehaviour
         SceneManager.LoadScene(nextStorySceneName);
     }
     
+    
 
     void Start()
     {
+        _backGroundSound = GetComponent<AudioSource>();
+        
+        _doorAnimator = ClearDoor.GetComponent<Animator>();
+        
         _savableObjects = FindObjectsOfType<MonoBehaviour>().OfType<ICheckpointSavable>().ToArray();
         
         _players = FindObjectsOfType<PlayerController>();

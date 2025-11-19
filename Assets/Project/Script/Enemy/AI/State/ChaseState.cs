@@ -33,6 +33,8 @@ namespace AI.FSM
             owner.moveSpeed = owner.baseMoveSpeed * chaseSpeedMultiplier;
             
             //추격 애니메이션...
+            owner.animator.SetBool("isMove", true);
+            owner.SetDetectionEffect(true);
         }
 
         public void Execute()
@@ -53,6 +55,9 @@ namespace AI.FSM
             {
                 // 플레이어 이탈 시: ReturnState로 전환
                 owner.ChangeState(new ReturnState(owner)); 
+                
+                
+            
                 return;
             }
 
@@ -64,15 +69,22 @@ namespace AI.FSM
             {
                 // ReturnState로 전환 (강제 복귀)
                 owner.ChangeState(new ReturnState(owner)); 
+                
+                
+
                 return;
             }
+            
+
         }
 
         public void Exit()
         {
+            owner.SetDetectionEffect(false);
             // 속도 복원
             owner.moveSpeed = owner.baseMoveSpeed;
             
+            owner.animator.SetBool("isMove", false);
             // 2. 진행 중인 모든 코루틴 중지 (배회로 돌아갈 경우 필요)
             owner.StopAllCoroutines(); 
         }

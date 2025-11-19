@@ -36,6 +36,22 @@ public class EnemyAI : MonoBehaviour, ICheckpointSavable
     //private Vector3 targetPosition; //목표 위치
     public float currentMoveDirection = 1.0f;
     
+    
+    //애니메이션
+    public Animator animator;
+    private SpriteRenderer _spriteRenderer;
+    
+    
+    [Header("Detection Effect")]
+    public SpriteRenderer effectRenderer;
+    
+
+    public void SetDetectionEffect(bool enable)
+    {
+        effectRenderer.enabled = enable;
+    }
+    
+    
     //
     public void ChangeState(IState newState)
     {
@@ -65,10 +81,18 @@ public class EnemyAI : MonoBehaviour, ICheckpointSavable
         if (rb == null) return;
         
         
+        
         //목표 지점까지의 방향벡터
         Vector2 Velocity = new Vector2(currentMoveDirection * moveSpeed, rb.velocity.y);
         
         rb.velocity = Velocity;
+        Flip(currentMoveDirection);
+    }
+    
+    private void Flip(float horizontalInput) 
+    { 
+        if (horizontalInput > 0) _spriteRenderer.flipX = true;
+        else if (horizontalInput < 0) _spriteRenderer.flipX = false;
     }
 
     public float DecideDirection()
@@ -108,6 +132,7 @@ public class EnemyAI : MonoBehaviour, ICheckpointSavable
     // 플레이어가 감지
     public void OnPlayerDetected(Transform player)
     {
+        
         Debug.Log("OnDetected");
         
         // 현 상태가 PatrolState일 때만 Chase 전환 -> 중복 전환 방지
@@ -140,9 +165,16 @@ public class EnemyAI : MonoBehaviour, ICheckpointSavable
     
     void Start()
     {
+        SetDetectionEffect(false);
+        
         baseMoveSpeed = moveSpeed;
         
-     
+        _spriteRenderer = GetComponent<SpriteRenderer>();
+        if(_spriteRenderer == null) Debug.LogError("Sprite Renderer is null");
+        
+        animator = GetComponent<Animator>();
+        if(animator == null) Debug.LogError("Animator component not found");
+        
         rb = GetComponent<Rigidbody2D>();
         if (rb == null) Debug.LogError("Rigidbody2D component not found");
     

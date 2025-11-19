@@ -23,12 +23,18 @@ public class ReverseGravity : MonoBehaviour, IInteractable
             if (_playerInput == null || _playerMovement == null) return;
             
             
+            //중력반전 연출
+            _playerMovement.ReverseGravityEffectCo();
+            
+            
             //스케일 변수 반전 및 중력 스케일 적용
             _playerMovement.gravityValue *= -1;
             _playerMovement.rigidBody.gravityScale = _playerMovement.gravityValue;
             
             //점프키 전환(W <--> S)
             _playerInput.IsGravityReverse = _playerMovement.gravityValue < 0; 
+            
+            
             
         } 
     }

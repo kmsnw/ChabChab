@@ -35,6 +35,10 @@ public class TitleSceneManager : MonoBehaviour
     // 씬 전환 및 페이드 처리 담당 코루틴
     private IEnumerator TransitionToGameScene()
     {
+        startButton.SetActive(false);
+        howtoButton.SetActive(false);
+        exitButton.SetActive(false);
+        
         isTransitioning = true;
         
         startButton.SetActive(false);
@@ -70,7 +74,7 @@ public class TitleSceneManager : MonoBehaviour
     //게임종료
     public void QuitGame()
     {
-        Application.Quit();
+       //Application.Quit();
         Debug.Log("게임 종료");
     }
 }

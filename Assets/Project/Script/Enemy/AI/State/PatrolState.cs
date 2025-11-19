@@ -30,6 +30,7 @@ namespace AI.FSM
         {
             owner.IsMoving = true;
 
+            owner.animator.SetBool("isMove", true);
         }
         public void Execute()
         {
@@ -62,6 +63,8 @@ namespace AI.FSM
         
         public void Exit()
         {
+            owner.animator.SetBool("isIdle", false); 
+            owner.animator.SetBool("isMove", false);
             //코루틴 정지
             owner.StopAllCoroutines();
         }
@@ -73,7 +76,11 @@ namespace AI.FSM
             {
                 // 정지 상태(코루틴 수행. duration 만큼 확정정지)
                 owner.IsMoving = false;
+                owner.animator.SetBool("isIdle", true);
+                owner.animator.SetBool("isMove", false);
+
                 owner.StartCoroutine(StopAndWaitCoroutine(stopDuration));
+                
             }
             else
             {
@@ -84,7 +91,8 @@ namespace AI.FSM
                 //2. 새로운 방향을 EnemyAI에 전달
                 owner.currentMoveDirection = newDirection;
                 owner.IsMoving = true;
-                
+                owner.animator.SetBool("isMove", true);
+                owner.animator.SetBool("isIdle", false);
             }
         }
 
@@ -92,6 +100,13 @@ namespace AI.FSM
         {
             yield return new WaitForSeconds(duration);
             owner.IsMoving = true; //duration 후 이동 플래그 재활성화
+            
+            
+            float newDirection = owner.DecideDirection();
+            owner.currentMoveDirection = newDirection;
+            
+            owner.animator.SetBool("isMove", true); 
+            owner.animator.SetBool("isIdle", false);
         }
 
     }
