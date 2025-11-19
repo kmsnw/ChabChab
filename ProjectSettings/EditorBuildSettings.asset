@@ -6,15 +6,27 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scenes/TitleScene.unity
+    path: Assets/Project/Scenes/TitleScene.unity
     guid: adbfd6043a865464c98be0970b33f9fc
   - enabled: 1
-    path: Assets/Scenes/TutorialScene.unity
+    path: Assets/Project/Scenes/cutScene/CutScene1.unity
+    guid: 46a53554b2c991147b0e32ed7073ac8b
+  - enabled: 1
+    path: Assets/Project/Scenes/StageScene/Tutorial.unity
     guid: 516f5f745fd032440a79304be1dc6c8f
   - enabled: 1
-    path: Assets/Scenes/Stage1.unity
-    guid: 92f343f4ef4c49f45afa7d18f55a3217
-  - enabled: 0
-    path: Assets/Scenes/SampleScene.unity
-    guid: 8c9cfa26abfee488c85f1582747f6a02
+    path: Assets/Project/Scenes/cutScene/CutScene2.unity
+    guid: fd219629daec05c44848a655fb752ebd
+  - enabled: 1
+    path: Assets/Project/Scenes/StageScene/Stage1.unity
+    guid: ab2a97a79153d434eae83ed6cf2c7de8
+  - enabled: 1
+    path: Assets/Project/Scenes/cutScene/CutScene3.unity
+    guid: 22caeb78c587f734abaa90d42d8913c9
+  - enabled: 1
+    path: Assets/Project/Scenes/StageScene/Stage2.unity
+    guid: 88dab861f47a91b4597ae2fc5b118ddd
+  - enabled: 1
+    path: Assets/Project/Scenes/cutScene/CutScene4.unity
+    guid: 17bc08cafa2b1c0418cf62d49d42b05f
   m_configObjects: {}
