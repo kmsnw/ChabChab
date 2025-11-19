@@ -9,7 +9,7 @@ using UnityEngine;
 
 
 [RequireComponent(typeof(Rigidbody2D))]
-public class CharacterMovement : MonoBehaviour
+public class PlayerMovement : MonoBehaviour
 {
     private AudioSource _audioSource;
     [Header("Sound Clips")]
@@ -23,7 +23,7 @@ public class CharacterMovement : MonoBehaviour
     private SpriteRenderer _spriteRenderer;
  
     [Header("Wall Jump Fix")]
-    public float wallJumpInputDenialTime = 0.2f; // 벽 점프 후 벽점프 무시 시간
+    public float wallJumpInputDenialTime = 3f; // 벽 점프 후 벽점프 무시 시간
     private float inputDenialTimer = 0f; // 무시 타이머
     
     [Header("Movement Settings")]
@@ -161,6 +161,7 @@ public class CharacterMovement : MonoBehaviour
         //일반 점프 
         if (isGrounded && !_animator.GetBool(ANIM_IS_JUMPING)) 
         {
+            Debug.Log("Jumping");
             // PMove 로직: y 속도 초기화 후 AddForce(Impulse)
             _rigidBody.velocity = new Vector2(_rigidBody.velocity.x, 0f); 
             _rigidBody.AddForce(Vector2.up * jumpPower, ForceMode2D.Impulse);
@@ -170,7 +171,7 @@ public class CharacterMovement : MonoBehaviour
         //벽 점프
         else if (isWallClinging)
         {
-            //Debug.Log("Wall jump");
+            Debug.Log("Wall jump");
             bool isTouchingWallRight = CheckWallTouch(Vector2.right);
             int direction = isTouchingWallRight ? -1 : 1; // 점프 방향(벽 반대)
             
@@ -181,7 +182,8 @@ public class CharacterMovement : MonoBehaviour
             inputDenialTimer = wallJumpInputDenialTime;
             
             //벽점프 애니메이션 -> 지금은 그냥 점프?..
-            _animator.SetBool(ANIM_IS_JUMPING, true);
+            //_animator.SetBool(ANIM_IS_JUMPING, true);
+            _animator.SetTrigger("WallJumpTrigger");
             _animator.SetBool(ANIM_IS_FALLING, false);
             
             //벽 잡기 상태 해제
@@ -224,6 +226,8 @@ public class CharacterMovement : MonoBehaviour
             isWallClinging = true;
             
             //벽 잡기 애니메이션..
+            Debug.Log("jumping false");
+            _animator.SetBool(ANIM_IS_JUMPING, false);
             _animator.SetBool(ANIM_IS_WALLCLING, true);
         }
         else if (isWallClinging)
