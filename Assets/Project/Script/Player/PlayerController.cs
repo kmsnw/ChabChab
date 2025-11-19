@@ -65,6 +65,7 @@ public class PlayerController : MonoBehaviour
         {
             _movement.Jump(_playerInput.JumpKeyDown);
         }
+        
         //상호작용 키 누름 -> true
         _currentInteractState = _playerInput.IsInteracting;
 

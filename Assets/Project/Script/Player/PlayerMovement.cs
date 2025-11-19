@@ -26,7 +26,7 @@ public class PlayerMovement : MonoBehaviour
 
     
     [Header("Wall Jump Fix")]
-    public float wallJumpInputDenialTime = 3f; // 벽 점프 후 벽점프 무시 시간
+    public float wallJumpInputDenialTime = 0.1f; // 벽 점프 후 벽점프 무시 시간
     private float inputDenialTimer = 0f; // 무시 타이머
     
     [Header("Movement Settings")]
@@ -53,6 +53,7 @@ public class PlayerMovement : MonoBehaviour
     private const string ANIM_IS_WALLCLING = "isWallCling";
     private const string ANIM_IS_WALKING = "isWalking";
     private const string ANIM_IS_DOUBLEJUMP = "isDoubleJump";
+    public const string ANIM_IS_GRAVITYREVERSED = "isGravityReversed";
     
     void Start()
     {
@@ -88,7 +89,8 @@ public class PlayerMovement : MonoBehaviour
         {
             
            canWallCling = true;
-            
+           animator.SetBool(ANIM_IS_GRAVITYREVERSED, false); 
+           
             if(isDoubleJump) isDoubleJump = false;
         }
         
@@ -120,28 +122,26 @@ public class PlayerMovement : MonoBehaviour
                 {
                     if (rigidBody.velocity.y < -0.01f)
                     {
-                        Debug.Log("reverse jumping");
                         animator.SetBool(ANIM_IS_JUMPING, true);
                         animator.SetBool(ANIM_IS_FALLING, false);
                     }
                     //falling
                     else if (rigidBody.velocity.y > 0.01f)
                     {
-                        Debug.Log("reverse falling");
                         animator.SetBool(ANIM_IS_JUMPING, false);
                         animator.SetBool(ANIM_IS_FALLING, true);
                     }
                     
                 }
             }
-
-            
             else // isGround or isWallCling
             {
                 // 낙하 플래그 초기화
                 animator.SetBool(ANIM_IS_FALLING, false);
             }
+            
         }
+        
     }
 
     void FixedUpdate()
@@ -200,7 +200,6 @@ public class PlayerMovement : MonoBehaviour
         //일반 점프 
         if (isGrounded && !animator.GetBool(ANIM_IS_JUMPING)) 
         {
-            Debug.Log("Jumping");
             // PMove 로직: y 속도 초기화 후 AddForce(Impulse)
             rigidBody.velocity = new Vector2(rigidBody.velocity.x, 0f); 
             rigidBody.AddForce(Vector2.up * jumpPower * gravityValue, ForceMode2D.Impulse);
@@ -210,7 +209,6 @@ public class PlayerMovement : MonoBehaviour
         //벽 점프
         else if (isWallClinging)
         {
-            Debug.Log("Wall jump");
             bool isTouchingWallRight = CheckWallTouch(Vector2.right);
             int direction = isTouchingWallRight ? -1 : 1; // 점프 방향(벽 반대)
             
@@ -222,15 +220,12 @@ public class PlayerMovement : MonoBehaviour
             inputDenialTimer = wallJumpInputDenialTime;
             
             //벽점프 애니메이션 -> 지금은 그냥 점프?..
-<<<<<<<< HEAD:Assets/Project/Script/PlayerMovement.cs
             animator.SetBool(ANIM_IS_JUMPING, true);
             animator.SetBool(ANIM_IS_FALLING, false);
-========
             //_animator.SetBool(ANIM_IS_JUMPING, true);
-            _animator.SetTrigger("WallJumpTrigger");
-            _animator.SetBool(ANIM_IS_FALLING, false);
->>>>>>>> 1f7f99ed0226d20a9eac7125789e2141807b5fad:Assets/Project/Script/Player/PlayerMovement.cs
-            
+            animator.SetTrigger("WallJumpTrigger");
+            animator.SetBool(ANIM_IS_FALLING, false);
+
             //벽 잡기 상태 해제
             isWallClinging = false;
             rigidBody.gravityScale = gravityValue;
@@ -239,6 +234,7 @@ public class PlayerMovement : MonoBehaviour
             
             canWallCling = false;
         }
+        //더블 점프(아이템 습득)
         else if (isDoubleJump)
         {
             rigidBody.velocity = new Vector2(rigidBody.velocity.x, 0f); 
@@ -247,6 +243,7 @@ public class PlayerMovement : MonoBehaviour
             animator.SetBool(ANIM_IS_JUMPING, true);
             animator.SetBool(ANIM_IS_FALLING, false);
             
+            Debug.Log("더블점프 state change");
             animator.SetBool(ANIM_IS_DOUBLEJUMP, false);
             isDoubleJump = false;
         }
@@ -285,13 +282,11 @@ public class PlayerMovement : MonoBehaviour
             isWallClinging = true;
             
             //벽 잡기 애니메이션..
-<<<<<<<< HEAD:Assets/Project/Script/PlayerMovement.cs
             animator.SetBool(ANIM_IS_WALLCLING, true);
-========
-            Debug.Log("jumping false");
-            _animator.SetBool(ANIM_IS_JUMPING, false);
-            _animator.SetBool(ANIM_IS_WALLCLING, true);
->>>>>>>> 1f7f99ed0226d20a9eac7125789e2141807b5fad:Assets/Project/Script/Player/PlayerMovement.cs
+
+            //Debug.Log("jumping false");
+            animator.SetBool(ANIM_IS_JUMPING, false);
+            animator.SetBool(ANIM_IS_WALLCLING, true);
         }
         else if (isWallClinging)
         {

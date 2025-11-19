@@ -26,6 +26,9 @@ public class DoubleJumpItem : MonoBehaviour
 
         if (_playerMovement == null || !collision.CompareTag("Player")) return;
 
+        _playerMovement.animator.SetBool("isDoubleJump", true);
+        _playerMovement.isDoubleJump = true;
+        
         
         Debug.Log("active double jump");
         _playerMovement.isDoubleJump = true;

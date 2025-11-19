@@ -12,11 +12,11 @@ GameObject:
   - component: {fileID: 8279985812535222265}
   - component: {fileID: 81536205120803689}
   - component: {fileID: 3390957878676215926}
-  - component: {fileID: 8252502462426285606}
   - component: {fileID: 4863193063959880994}
   - component: {fileID: 1117094943638537614}
   - component: {fileID: 1181628875369110504}
   - component: {fileID: 4246912425239304999}
+  - component: {fileID: 1318135413862276270}
   m_Layer: 0
   m_Name: SecondPlayer
   m_TagString: Player
@@ -103,10 +103,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a24384cc3921f494791d1d7797074fb8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  jumpKey: 273
-  interactKey: 303
+  jumpKeyNormal: 119
+  jumpKeyReverse: 115
   leftKey: 276
   rightKey: 275
+  interactKey: 303
+  IsGravityReverse: 0
 --- !u!50 &3390957878676215926
 Rigidbody2D:
   serializedVersion: 4
@@ -134,26 +136,6 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 4
---- !u!114 &8252502462426285606
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8598959564664980156}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a5d970149d3931144875ead3a7096c58, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  jumpSound: {fileID: 0}
-  wallJumpInputDenialTime: 0.2
-  maxSpeed: 2
-  jumpPower: 5
-  accelerationForce: 15
-  platformLayer:
-    serializedVersion: 2
-    m_Bits: 64
 --- !u!114 &4863193063959880994
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -247,3 +229,27 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &1318135413862276270
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8598959564664980156}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 485bdabe2ba0a473eacc760885b3d36a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  jumpSound: {fileID: 0}
+  animator: {fileID: 0}
+  rigidBody: {fileID: 0}
+  wallJumpInputDenialTime: 0.1
+  maxSpeed: 5
+  jumpPower: 10
+  accelerationForce: 15
+  gravityValue: 1
+  platformLayer:
+    serializedVersion: 2
+    m_Bits: 0
+  isDoubleJump: 0

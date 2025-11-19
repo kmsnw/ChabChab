@@ -18,6 +18,8 @@ public class ReverseGravity : MonoBehaviour, IInteractable
             _playerMovement = player.GetComponent<PlayerMovement>();
             _playerInput = player.GetComponent<PlayerInput>();
 
+            _playerMovement.animator.SetBool("isGravityReversed", true);
+            
             if (_playerInput == null || _playerMovement == null) return;
             
             
@@ -26,10 +28,7 @@ public class ReverseGravity : MonoBehaviour, IInteractable
             _playerMovement.rigidBody.gravityScale = _playerMovement.gravityValue;
             
             //점프키 전환(W <--> S)
-            _playerInput.jumpKey = _playerMovement.gravityValue > 0 ? KeyCode.W : KeyCode.S; 
-
-        
-                
+            _playerInput.IsGravityReverse = _playerMovement.gravityValue < 0; 
             
         } 
     }

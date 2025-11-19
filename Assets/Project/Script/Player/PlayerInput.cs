@@ -8,7 +8,8 @@ using UnityEngine;
 public class PlayerInput : MonoBehaviour
 {
     
-    public KeyCode jumpKey = KeyCode.W;          // P1: W, P2: UpArrow
+    public KeyCode jumpKeyNormal = KeyCode.W;
+    public KeyCode jumpKeyReverse = KeyCode.S;
     public KeyCode leftKey = KeyCode.A;          // P1: A, P2: LeftArrow
     public KeyCode rightKey = KeyCode.D;         // P1: D, P2: RightArrow
     public KeyCode interactKey;     // P1: S, P2: DownArrow
@@ -17,6 +18,21 @@ public class PlayerInput : MonoBehaviour
     public bool JumpKeyDown { get; private set; } 
     public bool IsInteracting { get; private set; } // S / DownArrow 상태
 
+    public bool IsGravityReverse = false;
+    
+    
+    public bool IsJumpKeyPressed(float gravityValue)
+    {
+        if (gravityValue > 0.0f)
+        {
+            return Input.GetKeyDown(jumpKeyNormal);
+        }
+        else
+        {
+            return Input.GetKey(jumpKeyReverse);
+        }
+    }
+    
     void Update()
     {
         // 수평 입력 처리
@@ -25,7 +41,16 @@ public class PlayerInput : MonoBehaviour
         if (Input.GetKey(leftKey)) HorizontalInput = -1f;
 
         // 단발성 입력 (점프)
-        JumpKeyDown = Input.GetKeyDown(jumpKey);
+        if (IsGravityReverse)
+        {
+            JumpKeyDown = Input.GetKeyDown(jumpKeyReverse);
+        }
+        else
+        {
+            JumpKeyDown = Input.GetKeyDown(jumpKeyNormal);
+        }
+        
+        
         
         // 지속성 입력 (상호작용/벽잡기)
         IsInteracting = Input.GetKey(interactKey);
