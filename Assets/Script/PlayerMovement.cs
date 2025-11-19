@@ -9,7 +9,7 @@ using UnityEngine;
 
 
 [RequireComponent(typeof(Rigidbody2D))]
-public class CharacterMovement : MonoBehaviour
+public class PlayerMovement : MonoBehaviour
 {
     private AudioSource _audioSource;
     [Header("Sound Clips")]
@@ -17,11 +17,14 @@ public class CharacterMovement : MonoBehaviour
     
     
     
-    private Rigidbody2D _rigidBody;
+    
     private Collider2D _charCollider;
-    private Animator _animator;
     private SpriteRenderer _spriteRenderer;
- 
+    //private groundCheckRay _groundCheckRay;
+    public Animator animator;
+    public Rigidbody2D rigidBody;
+
+    
     [Header("Wall Jump Fix")]
     public float wallJumpInputDenialTime = 0.2f; // 벽 점프 후 벽점프 무시 시간
     private float inputDenialTimer = 0f; // 무시 타이머
@@ -30,22 +33,26 @@ public class CharacterMovement : MonoBehaviour
     public float maxSpeed = 5f;
     public float jumpPower = 10f; // 점프 시 Impulse에 곱해질 값
     public float accelerationForce = 15f; // 수평 이동 시 AddForce에 곱해질 힘
+    public float gravityValue = 1f;
     
     [Header("Collision Layers")]
     public LayerMask platformLayer; // "Platform" 레이어 (벽/땅 감지)
     
     // --- 상태 ---
     public bool isWallClinging { get; private set; } = false; // 벽 잡기 상태
+    private bool canWallCling = true;
     
     private bool isGrounded;
-
+    public bool isDoubleJump = false;
+    
+    
     //애니메이션 bool변수
     private const string ANIM_IS_GROUNDED = "isGrounded";
     private const string ANIM_IS_JUMPING = "isJumping";
     private const string ANIM_IS_FALLING = "isFalling";
     private const string ANIM_IS_WALLCLING = "isWallCling";
     private const string ANIM_IS_WALKING = "isWalking";
-    
+    private const string ANIM_IS_DOUBLEJUMP = "isDoubleJump";
     
     void Start()
     {
@@ -53,11 +60,14 @@ public class CharacterMovement : MonoBehaviour
         // if(_audioSource == null) Debug.LogError("CharacterMovement: audio not found");
         //
         
-        _animator = GetComponent<Animator>();
-        if (_animator == null) Debug.LogError("Animator component not found on Player.");
+        // _groundCheckRay = GetComponent<groundCheckRay>();
+        // if(_groundCheckRay == null) Debug.LogError("Ground Check Ray is null");
         
-        _rigidBody = GetComponent<Rigidbody2D>();
-        if (_rigidBody == null) Debug.LogError("No rigidbody");
+        animator = GetComponent<Animator>();
+        if (animator == null) Debug.LogError("Animator component not found on Player.");
+        
+        rigidBody = GetComponent<Rigidbody2D>();
+        if (rigidBody == null) Debug.LogError("No rigidbody");
         
         
         _charCollider = GetComponent<BoxCollider2D>();
@@ -74,33 +84,62 @@ public class CharacterMovement : MonoBehaviour
     {
         isGrounded = CheckIfGrounded();
         
+        if (isGrounded)
+        {
+            
+           canWallCling = true;
+            
+            if(isDoubleJump) isDoubleJump = false;
+        }
         
         //애니메이션 변수 갱신
-        if (_animator != null)
+        if (animator != null)
         {
             // 지면 여부 animator 전달
-            _animator.SetBool(ANIM_IS_GROUNDED, isGrounded); 
+            animator.SetBool(ANIM_IS_GROUNDED, isGrounded); 
 
             // 땅에 닿아있지 않고, 벽을 잡고 있지 않을 때만 점프/낙하 상태 판단
             if (!isGrounded && !isWallClinging)
             {
                 //jumpping
-                if (_rigidBody.velocity.y > 0.01f)
+                if (gravityValue > 0f)
                 {
-                    _animator.SetBool(ANIM_IS_JUMPING, true);
-                    _animator.SetBool(ANIM_IS_FALLING, false);
+                    if (rigidBody.velocity.y > 0.01f)
+                    {
+                        animator.SetBool(ANIM_IS_JUMPING, true);
+                        animator.SetBool(ANIM_IS_FALLING, false);
+                    }
+                    //falling
+                    else if (rigidBody.velocity.y < -0.01f)
+                    {
+                        animator.SetBool(ANIM_IS_JUMPING, false);
+                        animator.SetBool(ANIM_IS_FALLING, true);
+                    }
                 }
-                //falling
-                else if (_rigidBody.velocity.y < -0.01f)
+                else
                 {
-                    _animator.SetBool(ANIM_IS_JUMPING, false);
-                    _animator.SetBool(ANIM_IS_FALLING, true);
+                    if (rigidBody.velocity.y < -0.01f)
+                    {
+                        Debug.Log("reverse jumping");
+                        animator.SetBool(ANIM_IS_JUMPING, true);
+                        animator.SetBool(ANIM_IS_FALLING, false);
+                    }
+                    //falling
+                    else if (rigidBody.velocity.y > 0.01f)
+                    {
+                        Debug.Log("reverse falling");
+                        animator.SetBool(ANIM_IS_JUMPING, false);
+                        animator.SetBool(ANIM_IS_FALLING, true);
+                    }
+                    
                 }
             }
+
+            
             else // isGround or isWallCling
             {
                 // 낙하 플래그 초기화
-                _animator.SetBool(ANIM_IS_FALLING, false);
+                animator.SetBool(ANIM_IS_FALLING, false);
             }
         }
     }
@@ -138,18 +177,18 @@ public class CharacterMovement : MonoBehaviour
     {
         if (horizontalInput != 0)
         {
-            _rigidBody.AddForce(Vector2.right * horizontalInput * accelerationForce, ForceMode2D.Impulse);
+            rigidBody.AddForce(Vector2.right * horizontalInput * accelerationForce, ForceMode2D.Impulse);
             Flip(horizontalInput);
         }
 
         //속도 제한
-        if (_rigidBody.velocity.x > maxSpeed) 
-            _rigidBody.velocity = new Vector2(maxSpeed, _rigidBody.velocity.y);
-        else if (_rigidBody.velocity.x < -maxSpeed) 
-            _rigidBody.velocity = new Vector2(-maxSpeed, _rigidBody.velocity.y);
+        if (rigidBody.velocity.x > maxSpeed) 
+            rigidBody.velocity = new Vector2(maxSpeed, rigidBody.velocity.y);
+        else if (rigidBody.velocity.x < -maxSpeed) 
+            rigidBody.velocity = new Vector2(-maxSpeed, rigidBody.velocity.y);
             
         //걷기 애니메이션 설정
-        _animator.SetBool(ANIM_IS_WALKING, Mathf.Abs(_rigidBody.velocity.x) > 0.01f);
+        animator.SetBool(ANIM_IS_WALKING, Mathf.Abs(rigidBody.velocity.x) > 0.01f);
     }
     
     public void Jump(bool isJumpInput)
@@ -159,13 +198,13 @@ public class CharacterMovement : MonoBehaviour
         // Debug.Log("wallJump");
         
         //일반 점프 
-        if (isGrounded && !_animator.GetBool(ANIM_IS_JUMPING)) 
+        if (isGrounded && !animator.GetBool(ANIM_IS_JUMPING)) 
         {
             // PMove 로직: y 속도 초기화 후 AddForce(Impulse)
-            _rigidBody.velocity = new Vector2(_rigidBody.velocity.x, 0f); 
-            _rigidBody.AddForce(Vector2.up * jumpPower, ForceMode2D.Impulse);
-            _animator.SetBool(ANIM_IS_JUMPING, true);
-            _animator.SetBool(ANIM_IS_FALLING, false);
+            rigidBody.velocity = new Vector2(rigidBody.velocity.x, 0f); 
+            rigidBody.AddForce(Vector2.up * jumpPower * gravityValue, ForceMode2D.Impulse);
+            animator.SetBool(ANIM_IS_JUMPING, true);
+            animator.SetBool(ANIM_IS_FALLING, false);
         }
         //벽 점프
         else if (isWallClinging)
@@ -174,22 +213,35 @@ public class CharacterMovement : MonoBehaviour
             bool isTouchingWallRight = CheckWallTouch(Vector2.right);
             int direction = isTouchingWallRight ? -1 : 1; // 점프 방향(벽 반대)
             
-            //벽 반대방향 우상향 대각선 addForce
-            _rigidBody.AddForce(new Vector2(direction, 1) * jumpPower, ForceMode2D.Impulse);
+            //벽 반대방향 상향 대각선 addForce
+            Vector2 jumpVector = new Vector2(direction, 1f *gravityValue);
+            rigidBody.AddForce(jumpVector * jumpPower, ForceMode2D.Impulse);
             
             //벽점프 무시 타이머 설정
             inputDenialTimer = wallJumpInputDenialTime;
             
             //벽점프 애니메이션 -> 지금은 그냥 점프?..
-            _animator.SetBool(ANIM_IS_JUMPING, true);
-            _animator.SetBool(ANIM_IS_FALLING, false);
+            animator.SetBool(ANIM_IS_JUMPING, true);
+            animator.SetBool(ANIM_IS_FALLING, false);
             
             //벽 잡기 상태 해제
             isWallClinging = false;
-            _rigidBody.gravityScale = 1; 
-            _animator.SetBool(ANIM_IS_WALLCLING, false); 
+            rigidBody.gravityScale = gravityValue;
             
+            animator.SetBool(ANIM_IS_WALLCLING, false); 
+            
+            canWallCling = false;
+        }
+        else if (isDoubleJump)
+        {
+            rigidBody.velocity = new Vector2(rigidBody.velocity.x, 0f); 
+            rigidBody.AddForce(Vector2.up * jumpPower * gravityValue, ForceMode2D.Impulse);
 
+            animator.SetBool(ANIM_IS_JUMPING, true);
+            animator.SetBool(ANIM_IS_FALLING, false);
+            
+            animator.SetBool(ANIM_IS_DOUBLEJUMP, false);
+            isDoubleJump = false;
         }
         
         
@@ -202,10 +254,12 @@ public class CharacterMovement : MonoBehaviour
     
     public void HandleWallCling(bool isClingInput)
     {
-        // 벽 붙기 무시 타이머 작동중
+        if(!canWallCling) return;
+        
+        //벽 붙기 무시 타이머 작동중
         if (inputDenialTimer > 0)
         {
-            _rigidBody.gravityScale = 1; 
+            rigidBody.gravityScale = gravityValue; 
             return; //벽 잡기 로직 무시
         }
         
@@ -218,20 +272,20 @@ public class CharacterMovement : MonoBehaviour
         {
             // Debug.Log("벽 잡기");
             //속도 및 중력 제어(0)
-            _rigidBody.velocity = Vector2.zero;
-            _rigidBody.gravityScale = 0;
+            rigidBody.velocity = Vector2.zero;
+            rigidBody.gravityScale = 0;
             
             isWallClinging = true;
             
             //벽 잡기 애니메이션..
-            _animator.SetBool(ANIM_IS_WALLCLING, true);
+            animator.SetBool(ANIM_IS_WALLCLING, true);
         }
         else if (isWallClinging)
         {
             //벽 잡기 해제
-            _rigidBody.gravityScale = 1;
+            rigidBody.gravityScale = gravityValue;
             isWallClinging = false;
-            _animator.SetBool(ANIM_IS_WALLCLING, false);
+            animator.SetBool(ANIM_IS_WALLCLING, false);
         }
     }
     
@@ -242,25 +296,30 @@ public class CharacterMovement : MonoBehaviour
         //콜라이더 바닥의 위치 및 크기
         Vector2 boundsCenter = _charCollider.bounds.center;
         Vector2 boundsExtents = _charCollider.bounds.extents; // 콜라이더 중심으로부터의 절반 크기
-    
+        
         
         float rayHorizontalOffset = boundsExtents.x - 0.05f; 
         const float groundRayDistance = 0.1f; //ray 길이
+        Vector2 rayDirection = Vector2.down * gravityValue;
+        
+        float originY = (gravityValue >0) ? _charCollider.bounds.min.y : _charCollider.bounds.max.y;
         
         // 1. 왼쪽 레이
-        Vector2 originLeft = new Vector2(boundsCenter.x - rayHorizontalOffset, _charCollider.bounds.min.y);
+        Vector2 originLeft = new Vector2(boundsCenter.x - rayHorizontalOffset, originY);
         
         // 2. 오른쪽 레이
-        Vector2 originRight = new Vector2(boundsCenter.x + rayHorizontalOffset, _charCollider.bounds.min.y);
-
-        RaycastHit2D hitLeft = Physics2D.Raycast(originLeft, Vector2.down, groundRayDistance, platformLayer);
-        RaycastHit2D hitRight = Physics2D.Raycast(originRight, Vector2.down, groundRayDistance, platformLayer);
-    
+        Vector2 originRight = new Vector2(boundsCenter.x + rayHorizontalOffset, originY);
+        
+        RaycastHit2D hitLeft = Physics2D.Raycast(originLeft, rayDirection, groundRayDistance, platformLayer);
+        RaycastHit2D hitRight = Physics2D.Raycast(originRight, rayDirection, groundRayDistance, platformLayer);
+        
         // Debug.DrawRay(originLeft, Vector2.down * groundRayDistance, Color.yellow);
         // Debug.DrawRay(originRight, Vector2.down * groundRayDistance, Color.yellow);
-
+        
         //둘 중 캐스팅 되면 true
         return hitLeft.collider != null || hitRight.collider != null;
+
+        //return _groundCheckRay.CheckIfGrounded();
     }
 
     // 벽 감지 (벽 잡기/점프용)
@@ -271,7 +330,7 @@ public class CharacterMovement : MonoBehaviour
         float rayDistance = colliderHalfWidth + 0.1f; // 너비의 절반 + 여유분 0.1f
 
         RaycastHit2D hit = Physics2D.Raycast(
-            _rigidBody.position, 
+            rigidBody.position, 
             direction, 
             rayDistance, 
             platformLayer

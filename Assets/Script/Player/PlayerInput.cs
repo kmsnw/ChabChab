@@ -9,9 +9,9 @@ public class PlayerInput : MonoBehaviour
 {
     
     public KeyCode jumpKey = KeyCode.W;          // P1: W, P2: UpArrow
-    public KeyCode interactKey = KeyCode.S;     // P1: S, P2: DownArrow
     public KeyCode leftKey = KeyCode.A;          // P1: A, P2: LeftArrow
     public KeyCode rightKey = KeyCode.D;         // P1: D, P2: RightArrow
+    public KeyCode interactKey;     // P1: S, P2: DownArrow
 
     public float HorizontalInput { get; private set; }
     public bool JumpKeyDown { get; private set; } 

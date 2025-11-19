@@ -8,12 +8,12 @@ using UnityEngine;
 //플레이어 조작 관리(상호작용, 이동...)
 
 [RequireComponent(typeof(PlayerInput))]
-[RequireComponent(typeof(CharacterMovement))]
+[RequireComponent(typeof(PlayerMovement))]
 
 public class PlayerController : MonoBehaviour
 {
     private PlayerInput _playerInput;
-    private CharacterMovement _movement;
+    private PlayerMovement _movement;
     
     private IInteractable _currentInteractable = null;
     private bool _currentInteractState = false;
@@ -24,7 +24,7 @@ public class PlayerController : MonoBehaviour
     void Awake()
     {
         _playerInput = GetComponent<PlayerInput>();
-        _movement = GetComponent<CharacterMovement>();
+        _movement = GetComponent<PlayerMovement>();
     }
 
     private void OnTriggerEnter2D(Collider2D other)
