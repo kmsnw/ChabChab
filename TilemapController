@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class TilemapController : MonoBehaviour
 {
-    public GameObject OnTilemap; // 작동시 드러나는 타일맵
-    public GameObject OffTilemap; // 작동시 사라지는 타일맵
+    public GameObject OnTilemap; // 작동시 드러나는 타일 맵
+    public GameObject OffTilemap; // 작동시 사라지는 타일 맵
 
 
     void Awake()
