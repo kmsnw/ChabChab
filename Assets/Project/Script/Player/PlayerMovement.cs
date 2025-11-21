@@ -62,7 +62,6 @@ public class PlayerMovement : MonoBehaviour
     private const string ANIM_IS_FALLING = "isFalling";
     private const string ANIM_IS_WALLCLING = "isWallCling";
     private const string ANIM_IS_WALKING = "isWalking";
-    private const string ANIM_IS_DOUBLEJUMP = "isDoubleJump";
     public const string ANIM_IS_GRAVITYREVERSED = "isGravityReversed";
     
     
@@ -102,9 +101,13 @@ public class PlayerMovement : MonoBehaviour
         {
             
            canWallCling = true;
-           animator.SetBool(ANIM_IS_GRAVITYREVERSED, false); 
-           
-            if(isDoubleJump) isDoubleJump = false;
+           animator.SetBool(ANIM_IS_GRAVITYREVERSED, false);
+
+           if (isDoubleJump)
+           {
+               isDoubleJump = false;
+               
+           }
         }
         
         //애니메이션 변수 갱신
@@ -265,7 +268,6 @@ public class PlayerMovement : MonoBehaviour
             animator.SetBool(ANIM_IS_FALLING, false);
             
             Debug.Log("더블점프 state change");
-            animator.SetBool(ANIM_IS_DOUBLEJUMP, false);
             isDoubleJump = false;
             
             jumpSuccessful = true;
