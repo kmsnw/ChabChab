@@ -8,6 +8,8 @@ public class PauseManager : MonoBehaviour
     public GameObject pausePanel;
     public GameObject howToPanel;
 
+    public StageManager stageManager;
+
     private bool isPaused = false;
 
     void Update()
@@ -51,6 +53,16 @@ public class PauseManager : MonoBehaviour
     {
         Application.Quit();
     }
+
+
+    public void ReloadCheckpoint()
+    {
+        Time.timeScale = 1f;  // 일시정지 해제 후 실행
+        stageManager.ReloadCheckPoint();
+        pausePanel.SetActive(false);
+    }
+
+
 
     // 일시정지 상태에서 HowTo 열기
     public void OpenHowTo()
