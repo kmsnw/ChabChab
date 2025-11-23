@@ -335,6 +335,22 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 4775522472193948247, guid: bbed81b9ce759564a810462c218f6d44, type: 3}
+      propertyPath: nextSceneName
+      value: TitleScene
+      objectReference: {fileID: 0}
+    - target: {fileID: 4775522472193948247, guid: bbed81b9ce759564a810462c218f6d44, type: 3}
+      propertyPath: comicCuts.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 4775522472193948247, guid: bbed81b9ce759564a810462c218f6d44, type: 3}
+      propertyPath: comicCuts.Array.data[0]
+      value: 
+      objectReference: {fileID: 21300000, guid: 0173b5fd7d94842499dc98f79d794315, type: 3}
+    - target: {fileID: 4775522472193948247, guid: bbed81b9ce759564a810462c218f6d44, type: 3}
+      propertyPath: comicCuts.Array.data[1]
+      value: 
+      objectReference: {fileID: 21300000, guid: 2b8372b6acb652844b085abba7a20ec6, type: 3}
     - target: {fileID: 7041225754058007403, guid: bbed81b9ce759564a810462c218f6d44, type: 3}
       propertyPath: m_Name
       value: CutSceneSystem

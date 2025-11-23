@@ -1,19 +1,24 @@
 using UnityEngine;
 
+// 이 스크립트를 넣은 오브젝트와 플레이어가 충돌 시 계단 tilemap을 활성화/비활성화하는 스크립트
+
 public class TilemapController : MonoBehaviour
 {
-    public GameObject stairsTilemap; // 계단 타일맵
+    public GameObject OnTilemap; // 작동시 드러나는 타일 맵
+    public GameObject OffTilemap; // 작동시 사라지는 타일 맵
+
 
     void Awake()
     {
-        stairsTilemap.SetActive(false); // 시작 시 숨김
+        OnTilemap.SetActive(false); // 시작 시 숨김
     }
 
     void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.CompareTag("Player") && this.CompareTag("Key"))
         {
-            stairsTilemap.SetActive(true); // 플레이어와 충돌시 stairsTilemap을 생성
+            OnTilemap.SetActive(true);
+            OffTilemap.SetActive(false);
         }
     }
 
@@ -21,7 +26,8 @@ public class TilemapController : MonoBehaviour
     {
         if (collision.CompareTag("Player") && this.CompareTag("Key"))
         {
-            stairsTilemap.SetActive(false); // 플레이어가 충돌해제시 stairsTilemap을 삭제
+            OnTilemap.SetActive(false);
+            OffTilemap.SetActive(true);
         }
     } 
 } 

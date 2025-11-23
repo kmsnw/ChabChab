@@ -13,7 +13,7 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour
 {
     private PlayerInput _playerInput;
-    private PlayerMovement _movement;
+    public PlayerMovement _movement;
     
     private IInteractable _currentInteractable = null;
     private bool _currentInteractState = false;

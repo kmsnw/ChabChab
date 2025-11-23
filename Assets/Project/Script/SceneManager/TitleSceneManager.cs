@@ -7,6 +7,10 @@ using UnityEngine.SceneManagement;
 
 public class TitleSceneManager : MonoBehaviour
 {
+    [Header("Sound")]
+    private AudioSource audioSource;
+    public AudioClip titleSound;
+    
     [Header("UI Buttons")] 
     public GameObject startButton;
     public GameObject howtoButton;
@@ -26,6 +30,7 @@ public class TitleSceneManager : MonoBehaviour
     // 게임 시작 버튼 클릭 시 호출될 함수
     public void StartGame()
     {
+  
         if (isTransitioning) return;
         
         // 씬 전환 코루틴 시작
@@ -76,5 +81,14 @@ public class TitleSceneManager : MonoBehaviour
     {
        //Application.Quit();
         Debug.Log("게임 종료");
+    }
+
+
+    void Start()
+    {
+        audioSource = GetComponent<AudioSource>();
+        audioSource.clip = titleSound;
+        audioSource.Play();
+
     }
 }

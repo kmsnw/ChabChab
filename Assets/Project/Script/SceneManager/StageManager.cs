@@ -12,6 +12,17 @@ using UnityEngine.UI;
 
 public class StageManager : MonoBehaviour
 {
+    private bool _isPlayerDying = false;
+    
+    [Header("Death Settings")]
+    public float deathPauseDuration = 4f; // 죽음 순간 조작 정지 시간
+    public float gameOverImageDuration = 8f; // 게임 오버 이미지가 보여지는 시간
+    
+    [Header("UI & Sound")]
+    public GameObject gameOverImageUI; // 인스펙터에 연결할 게임 오버 UI 이미지 오브젝트
+    public AudioClip deathSound;       // 플레이어 피격/사망 순간 짧은 소리
+    public AudioClip gameOverSound;    // 게임 오버 연출 중 재생할 소리
+    
     [Header("Fade Panel")]
     public ScreenFader screenFader;
     public float fadeDuration = 0.5f;
@@ -61,6 +72,7 @@ public class StageManager : MonoBehaviour
     
     //사운드
     private AudioSource _backGroundSound;
+    private AudioSource _audioSource;
     
     
     private void CheckStageClear()
@@ -93,14 +105,216 @@ public class StageManager : MonoBehaviour
     //오브젝트 죽음 괸리(플레이어, 몬스터...)
     public void objectDeath(GameObject deadObject)
     {
-        //플레이어 사망
+        if (_isPlayerDying) return;
+        
+        // 플레이어 사망
         if (deadObject.CompareTag("Player"))
         {
             Debug.Log("player death");
-            
-            ReloadCheckPoint(); //최신 체크포인트 기반 Reload
+        
+            // **!!! 기존 ReloadCheckPoint() 대신 연출 코루틴 호출 !!!**
+            StartCoroutine(PlayerDeathFlowCoroutine());
         }
         //else if (deadObject.CompareTag("Enemy"))
+    }
+    
+    private IEnumerator PlayerDeathFlowCoroutine()
+    {
+        _isPlayerDying = true;
+        
+        DisablePlayerControls(); // 조작 스크립트 비활성화
+        StopPlayerPhysicsAndAnim();     // 속도 0, 중력 0으로 설정
+        
+        // 배경음악 정지
+        _backGroundSound.Stop();
+        
+        // 사망 순간의 짧은 효과음 재생 (StageManager의 AudioSource 사용)
+        if (_audioSource != null && deathSound != null)
+        {
+            _audioSource.PlayOneShot(deathSound);
+        }
+        
+        // 정지 상태 유지 (Unscaled Delta Time 사용)
+        yield return new WaitForSeconds(deathPauseDuration);
+        
+        
+        // 2. 페이드 인 (검은 화면) 및 Game Over 이미지/사운드 표시
+        
+        // 페이드 인 (화면을 검게 만듦)
+        yield return StartCoroutine(screenFader.FadeScreen(1f, fadeDuration)); 
+        
+        // Game Over 이미지 활성화 및 점차 선명하게 (Opacity 조정 필요)
+        if (gameOverImageUI != null)
+        {
+
+            // UI 요소를 활성화하고 투명도를 0으로 설정
+            gameOverImageUI.SetActive(true);
+            Image imageComp = gameOverImageUI.GetComponent<Image>();
+            if (imageComp == null)
+            {
+                Debug.LogError("Game Over Image UI does not have an Image component.");
+                yield break; // Image 컴포넌트가 없으면 코루틴 종료
+            }
+        
+            // 초기 색상 가져오기 (알파를 0으로 초기화)
+            Color startColor = imageComp.color;
+            startColor.a = 0f;
+            imageComp.color = startColor;
+            
+            // 게임 오버 사운드 재생
+            if (_audioSource != null && gameOverSound != null)
+            {
+                _audioSource.PlayOneShot(gameOverSound);
+            }
+            
+            // 게임 오버 이미지 점차 선명하게 (0 -> 1)
+            float timer = 0f;
+            while (timer < fadeDuration)
+            {
+                timer += Time.deltaTime;
+                float alpha = Mathf.Lerp(0f, 1f, timer / fadeDuration);
+            
+                Color newColor = imageComp.color;
+                newColor.a = alpha;
+                imageComp.color = newColor;
+            
+                yield return null;
+            }
+            
+            // 확실히 불투명하게 설정
+            Color finalColor = imageComp.color;
+            finalColor.a = 1f;
+            imageComp.color = finalColor;
+
+            // 게임 오버 이미지가 보여지는 시간 동안 대기
+            yield return new WaitForSeconds(gameOverImageDuration);
+
+            
+            // 게임 오버 이미지 점차 사라짐
+        
+            // 게임 오버 이미지 점차 사라지게 (1 -> 0)
+            timer = 0f;
+            while (timer < fadeDuration)
+            {
+                timer += Time.deltaTime;
+                float alpha = Mathf.Lerp(1f, 0f, timer / fadeDuration);
+            
+                
+                Color newColor = imageComp.color;
+                newColor.a = alpha;
+                imageComp.color = newColor;
+            
+                yield return null;
+            }
+        
+            // 확실히 투명하게 설정
+            finalColor = imageComp.color;
+            finalColor.a = 0f;
+            imageComp.color = finalColor;
+            
+            // 게임 오버 UI 비활성화
+            gameOverImageUI.SetActive(false);
+        }
+    
+        
+        // 체크포인트 부활 및 조작 활성화 + 배경음악 다시 재생
+        
+        // 최신 체크포인트 기반 리로드 (플레이어 리스폰, 체력 회복, 저장된 오브젝트 상태 로드)
+        ReloadCheckPoint(); 
+        
+        // 페이드 아웃 (화면을 다시 공개)
+        yield return StartCoroutine(screenFader.FadeScreen(0f, fadeDuration)); 
+        
+
+        // 배경음악 다시 재생
+        _backGroundSound.Play();
+        
+        _isPlayerDying = false;
+        
+        EnablePlayerControls();
+        
+        Debug.Log("Respawn Complete and Game Resumed.");
+    }
+    
+    private void StopPlayerPhysicsAndAnim()
+    {
+        foreach (var player in _players)
+        {
+            if (player != null)
+            {
+                Rigidbody2D rb = player.GetComponent<Rigidbody2D>();
+            
+                if (rb != null)
+                {
+                    // 잔여 속도/힘 강제 정지
+                    rb.velocity = Vector2.zero; 
+                    rb.angularVelocity = 0f;
+                
+                    // 중력제거
+                    rb.gravityScale = 0f; 
+                }
+            }
+        }
+    }
+    
+    private void DisablePlayerControls()
+    {
+        // 모든 플레이어의 스크립트 비활성화 (피격, 입력, 움직임 로직 차단)
+        foreach (var player in _players)
+        {
+            if (player != null)
+            {
+                //컨트롤러 스크립트 비활성(조작막기)
+                player.enabled = false;
+                
+                
+                //물리 효과 정지
+                Rigidbody2D rb = player.GetComponent<Rigidbody2D>();
+            
+                if (rb != null)
+                {
+                    rb.velocity = Vector2.zero; 
+                    rb.angularVelocity = 0f;
+                
+                    rb.gravityScale = 0f; 
+                }
+                
+                //애니메이션 정지
+                Animator anim = player.GetComponent<Animator>();
+                if (anim != null)
+                {
+                    
+                    anim.enabled = false; 
+                }
+            }
+            
+
+        }
+    }
+
+    private void EnablePlayerControls()
+    {
+        foreach (var player in _players)
+        {
+            if (player != null)
+            {
+                Rigidbody2D rb = player.GetComponent<Rigidbody2D>();
+                if (rb != null)
+                {
+                    rb.gravityScale = player._movement.gravityValue; 
+                }
+            
+                //컨트롤러 스크립트 활성화
+                player.enabled = true;
+                
+                //애니메이션 활성화
+                Animator anim = player.GetComponent<Animator>();
+                if (anim != null)
+                {
+                    anim.enabled = true;
+                }
+            }
+        }
     }
 
     public void SetCurrentCheckPoint(CheckPoint newCheckPoint)
@@ -331,6 +545,8 @@ public class StageManager : MonoBehaviour
         
         _players = FindObjectsOfType<PlayerController>();
      
+        _audioSource = GetComponent<AudioSource>();
+        
         
         if (button1 == null || button2 == null)
         {
