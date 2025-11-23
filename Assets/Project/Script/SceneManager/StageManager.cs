@@ -121,7 +121,6 @@ public class StageManager : MonoBehaviour
     private IEnumerator PlayerDeathFlowCoroutine()
     {
         _isPlayerDying = true;
-        // 1. 죽는 순간 데미지 소리 호출 및 게임 정지
         
         DisablePlayerControls(); // 조작 스크립트 비활성화
         StopPlayerPhysicsAndAnim();     // 속도 0, 중력 0으로 설정
@@ -135,17 +134,10 @@ public class StageManager : MonoBehaviour
             _audioSource.PlayOneShot(deathSound);
         }
         
-        // // 시간 정지 (연출을 위해 일시적으로 TimeScale 0)
-        // Time.timeScale = 0f;
-        //
         // 정지 상태 유지 (Unscaled Delta Time 사용)
         yield return new WaitForSeconds(deathPauseDuration);
         
-        // // 시간 재개
-        // Time.timeScale = 1f;
-        //
-
-
+        
         // 2. 페이드 인 (검은 화면) 및 Game Over 이미지/사운드 표시
         
         // 페이드 인 (화면을 검게 만듦)
@@ -182,7 +174,6 @@ public class StageManager : MonoBehaviour
                 timer += Time.deltaTime;
                 float alpha = Mathf.Lerp(0f, 1f, timer / fadeDuration);
             
-                // ⭐ ⭐⭐ 수정된 부분: Image 컴포넌트의 Color.a 값 변경 ⭐⭐⭐
                 Color newColor = imageComp.color;
                 newColor.a = alpha;
                 imageComp.color = newColor;
@@ -199,7 +190,7 @@ public class StageManager : MonoBehaviour
             yield return new WaitForSeconds(gameOverImageDuration);
 
             
-            // 3. 게임 오버 이미지 점차 사라짐
+            // 게임 오버 이미지 점차 사라짐
         
             // 게임 오버 이미지 점차 사라지게 (1 -> 0)
             timer = 0f;
@@ -226,7 +217,7 @@ public class StageManager : MonoBehaviour
         }
     
         
-        // 4. 체크포인트 부활 및 조작 활성화 + 배경음악 다시 재생
+        // 체크포인트 부활 및 조작 활성화 + 배경음악 다시 재생
         
         // 최신 체크포인트 기반 리로드 (플레이어 리스폰, 체력 회복, 저장된 오브젝트 상태 로드)
         ReloadCheckPoint(); 
@@ -255,11 +246,11 @@ public class StageManager : MonoBehaviour
             
                 if (rb != null)
                 {
-                    // 1. 잔여 속도/힘 강제 정지
+                    // 잔여 속도/힘 강제 정지
                     rb.velocity = Vector2.zero; 
                     rb.angularVelocity = 0f;
                 
-                    // 2. 중력 제거 (플레이어가 공중에 떠 있게 됩니다)
+                    // 중력제거
                     rb.gravityScale = 0f; 
                 }
             }
@@ -282,11 +273,9 @@ public class StageManager : MonoBehaviour
             
                 if (rb != null)
                 {
-                    // 1. 잔여 속도/힘 강제 정지
                     rb.velocity = Vector2.zero; 
                     rb.angularVelocity = 0f;
                 
-                    // 2. 중력 제거 (플레이어가 공중에 떠 있게 됩니다)
                     rb.gravityScale = 0f; 
                 }
                 
@@ -294,7 +283,7 @@ public class StageManager : MonoBehaviour
                 Animator anim = player.GetComponent<Animator>();
                 if (anim != null)
                 {
-                    // 1번 방법: 컴포넌트 비활성화 (가장 확실함)
+                    
                     anim.enabled = false; 
                 }
             }
@@ -309,13 +298,9 @@ public class StageManager : MonoBehaviour
         {
             if (player != null)
             {
-                // 중력 복구 (PlayerController에서 gravityValue를 접근 가능하도록 설정했거나,
-                // 기본값 1f로 복구한다고 가정합니다.)
                 Rigidbody2D rb = player.GetComponent<Rigidbody2D>();
                 if (rb != null)
                 {
-                    // PlayerController의 원래 중력값으로 복구 (예: 1f)
-                    // 만약 PlayerController에 public float gravityValue가 있다면 rb.gravityScale = player.gravityValue;
                     rb.gravityScale = player._movement.gravityValue; 
                 }
             
