@@ -1,0 +1,52 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class ReverseGravity : MonoBehaviour
+{
+    public PlayerMove player;
+    public Player2Move player2;
+
+    private bool hasInteracted1 = false;
+    private bool hasInteracted2 = false;
+
+    public Rigidbody2D rb; //리지드바디2D 
+
+    public void Start()
+    {
+        rb = GetComponent<Rigidbody2D>(); //리지드바디2D의 값들을 rb에 받아오기
+        rb.isKinematic = true; // 중력효과 안받게
+    }
+
+    void OnTriggerStay2D(Collider2D collision)
+    {
+        if ((player != null && player.isInteracting && !hasInteracted1))
+        {
+            DoInteract1();
+        }
+        if ((player2 != null && player2.isInteracting && !hasInteracted2))
+        {
+            DoInteract2();
+        }
+
+        // 둘 중 하나라도 상호작용하면 오브젝트 삭제
+        if (hasInteracted1 || hasInteracted2)
+        {
+            Destroy(gameObject);
+        }
+
+    }
+
+    void DoInteract1()
+    {
+        player.G = player.G * -1;
+        hasInteracted1 = true;
+    }
+
+    void DoInteract2()
+    {
+        player2.G = player2.G * -1;
+        hasInteracted2 = true;
+    }
+}
+
