@@ -420,7 +420,6 @@ public class StageManager : MonoBehaviour
         _players[0].enabled = false;
         _players[1].enabled = false;
         
-        
         //시네마틱 카메라 설정
         // 두 플레이어 중앙 위치 계산
         Vector3 centerPoint = (_players[0].transform.position + _players[1].transform.position) / 2f;

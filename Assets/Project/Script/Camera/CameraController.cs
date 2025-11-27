@@ -47,8 +47,18 @@ public class CameraController : MonoBehaviour
     private void LateUpdate()
     {
         
-        _targetPosition = targetPlayer.position + offset;
-        Vector3 smoothedPosition = Vector3.Lerp(transform.position, _targetPosition, Time.deltaTime * moveSpeed);
+        // _targetPosition = targetPlayer.position + offset;
+        // Vector3 smoothedPosition = Vector3.Lerp(transform.position, _targetPosition, Time.deltaTime * moveSpeed);
+        // transform.position = smoothedPosition;
+        //
+        
+        Vector3 desiredPosition = targetPlayer.position + offset;
+    
+        // Y축만 현재 카메라 위치로 덮어씌우기
+        desiredPosition = new Vector3(desiredPosition.x, transform.position.y, desiredPosition.z);
+        
+    
+        Vector3 smoothedPosition = Vector3.Lerp(transform.position, desiredPosition, Time.deltaTime * moveSpeed);
         transform.position = smoothedPosition;
     }
 }

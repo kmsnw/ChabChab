@@ -37,7 +37,7 @@ public class PlayerMovement : MonoBehaviour
     
     [Header("Collision Layers")]
     public LayerMask platformLayer; // "Platform" 레이어 (벽/땅 감지)
-    
+    public LayerMask playerLayer;
     
     [Header("Gravity Reverse Effect")]
     public float rotationSpeed = 360f; // 초당 회전 각도 (예: 1초에 360도)
@@ -183,6 +183,8 @@ public class PlayerMovement : MonoBehaviour
         {
             inputDenialTimer -= Time.fixedDeltaTime;
         }
+        
+        
 
         // ----------------------------------------------------
         
@@ -353,24 +355,50 @@ public class PlayerMovement : MonoBehaviour
         const float groundRayDistance = 0.1f; //ray 길이
         Vector2 rayDirection = Vector2.down * gravityValue;
         
-        float originY = (gravityValue >0) ? _charCollider.bounds.min.y : _charCollider.bounds.max.y;
+        // float originY = (gravityValue >0) ? _charCollider.bounds.min.y : _charCollider.bounds.max.y;
+        //
+        // // 1. 왼쪽 레이
+        // Vector2 originLeft = new Vector2(boundsCenter.x - rayHorizontalOffset, originY);
+        //
+        // // 2. 오른쪽 레이
+        // Vector2 originRight = new Vector2(boundsCenter.x + rayHorizontalOffset, originY);
         
+        const float rayOffsetDistance = 0.08f; // <-- 콜라이더 밖으로 띄울 작은 값 (예: 0.01f)
+    
+        
+        // 콜라이더 경계 Y 좌표
+        float boundaryY = (gravityValue > 0) ? _charCollider.bounds.min.y : _charCollider.bounds.max.y;
+    
+        // Y 좌표를 레이 방향으로 rayOffsetDistance 만큼 이동
+        float originY = boundaryY + rayDirection.y * rayOffsetDistance; // rayDirection.y는 +1 또는 -1이므로 부호를 맞춰줌
+    
         // 1. 왼쪽 레이
         Vector2 originLeft = new Vector2(boundsCenter.x - rayHorizontalOffset, originY);
-        
         // 2. 오른쪽 레이
         Vector2 originRight = new Vector2(boundsCenter.x + rayHorizontalOffset, originY);
         
-        RaycastHit2D hitLeft = Physics2D.Raycast(originLeft, rayDirection, groundRayDistance, platformLayer);
-        RaycastHit2D hitRight = Physics2D.Raycast(originRight, rayDirection, groundRayDistance, platformLayer);
+        LayerMask combinedMask = platformLayer | playerLayer;
         
-        // Debug.DrawRay(originLeft, Vector2.down * groundRayDistance, Color.yellow);
-        // Debug.DrawRay(originRight, Vector2.down * groundRayDistance, Color.yellow);
+        RaycastHit2D hitLeft = Physics2D.Raycast(originLeft, rayDirection, groundRayDistance, combinedMask);
+        RaycastHit2D hitRight = Physics2D.Raycast(originRight, rayDirection, groundRayDistance, combinedMask);
         
-        //둘 중 캐스팅 되면 true
-        return hitLeft.collider != null || hitRight.collider != null;
+        // RaycastHit2D hitLeft = Physics2D.Raycast(originLeft, rayDirection, groundRayDistance, platformLayer);
+        // RaycastHit2D hitRight = Physics2D.Raycast(originRight, rayDirection, groundRayDistance, platformLayer);
 
-        //return _groundCheckRay.CheckIfGrounded();
+
+        
+        Debug.DrawRay(originLeft, Vector2.down * groundRayDistance, Color.yellow);
+        Debug.DrawRay(originRight, Vector2.down * groundRayDistance, Color.yellow);
+       
+        
+        Collider2D selfCollider = _charCollider;
+        
+        bool isGroundedLeft = hitLeft.collider != null && hitLeft.collider != selfCollider;
+        bool isGroundedRight = hitRight.collider != null && hitRight.collider != selfCollider;
+        //둘 중 캐스팅 되면 true
+        // return hitLeft.collider != null || hitRight.collider != null;
+        return isGroundedLeft || isGroundedRight;
+        
     }
 
     // 벽 감지 (벽 잡기/점프용)

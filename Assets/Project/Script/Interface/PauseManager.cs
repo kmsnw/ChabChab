@@ -7,14 +7,16 @@ public class PauseManager : MonoBehaviour
 {
     public GameObject pausePanel;
     public GameObject howToPanel;
-
+    public GameObject PauseCanvas;
+    
+    
     public StageManager stageManager;
 
     private bool isPaused = false;
 
     void Update()
     {
-        // ESC ¶Ç´Â PÅ°·Î ÀÏ½ÃÁ¤Áö Åä±Û
+        // ESC ï¿½Ç´ï¿½ PÅ°ï¿½ï¿½ ï¿½Ï½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½
         if (Input.GetKeyDown(KeyCode.Escape))
         {
             if (isPaused)
@@ -24,31 +26,34 @@ public class PauseManager : MonoBehaviour
         }
     }
 
-    // °ÔÀÓ ÀÏ½ÃÁ¤Áö
+    // ï¿½ï¿½ï¿½ï¿½ ï¿½Ï½ï¿½ï¿½ï¿½ï¿½ï¿½
     public void PauseGame()
     {
         isPaused = true;
         pausePanel.SetActive(true);
-        Time.timeScale = 0f;  // ÀüÃ¼ °ÔÀÓ Á¤Áö
+        Time.timeScale = 0f;  // ï¿½ï¿½Ã¼ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
     }
 
-    // °ÔÀÓ ´Ù½Ã ½ÃÀÛ
+    // ï¿½ï¿½ï¿½ï¿½ ï¿½Ù½ï¿½ ï¿½ï¿½ï¿½ï¿½
     public void ResumeGame()
     {
+        Time.timeScale = 1f; // ï¿½ï¿½ï¿½ï¿½ ï¿½Óµï¿½
+
         isPaused = false;
         pausePanel.SetActive(false);
         howToPanel.SetActive(false);
-        Time.timeScale = 1f; // Á¤»ó ¼Óµµ
+        
+        
     }
 
-    // ¸ÞÀÎ Å¸ÀÌÆ²·Î ÀÌµ¿
+    // ï¿½ï¿½ï¿½ï¿½ Å¸ï¿½ï¿½Æ²ï¿½ï¿½ ï¿½Ìµï¿½
     public void GoToMainMenu()
     {
-        Time.timeScale = 1f; // ¾À ÀÌµ¿ Àü ¹Ýµå½Ã ¿ø·¡´ë·Î
+        Time.timeScale = 1f; // ï¿½ï¿½ ï¿½Ìµï¿½ ï¿½ï¿½ ï¿½Ýµï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
         SceneManager.LoadScene("TitleScene");
     }
 
-    // °ÔÀÓ Á¾·á
+    // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
     public void QuitGame()
     {
         Application.Quit();
@@ -57,14 +62,14 @@ public class PauseManager : MonoBehaviour
 
     public void ReloadCheckpoint()
     {
-        Time.timeScale = 1f;  // ÀÏ½ÃÁ¤Áö ÇØÁ¦ ÈÄ ½ÇÇà
+        Time.timeScale = 1f;  // ï¿½Ï½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
         stageManager.ReloadCheckPoint();
         pausePanel.SetActive(false);
     }
 
 
 
-    // ÀÏ½ÃÁ¤Áö »óÅÂ¿¡¼­ HowTo ¿­±â
+    // ï¿½Ï½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Â¿ï¿½ï¿½ï¿½ HowTo ï¿½ï¿½ï¿½ï¿½
     public void OpenHowTo()
     {
         howToPanel.SetActive(true);

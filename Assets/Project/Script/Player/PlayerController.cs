@@ -21,10 +21,13 @@ public class PlayerController : MonoBehaviour
     
     private Animator _animator;
 
+    private StageManager _stageManager;
+    
     void Awake()
     {
         _playerInput = GetComponent<PlayerInput>();
         _movement = GetComponent<PlayerMovement>();
+        
     }
 
     private void OnTriggerEnter2D(Collider2D other)
@@ -45,7 +48,7 @@ public class PlayerController : MonoBehaviour
 
     void Start()
     {
-        
+        _stageManager = FindObjectOfType<StageManager>();
     }
 
     //일정 시간간격 호출
@@ -56,6 +59,12 @@ public class PlayerController : MonoBehaviour
         
         //벽 붙기..
         _movement.HandleWallCling(_playerInput.IsInteracting);
+
+        if (transform.position.y < -3f)
+        {
+            Debug.Log("Player Falling");
+            _stageManager.objectDeath(this.gameObject);
+        }
     }
 
     void Update()
