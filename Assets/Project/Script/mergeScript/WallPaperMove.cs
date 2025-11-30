@@ -7,7 +7,7 @@ public class WallPaperMove : MonoBehaviour
     public PlayerController player; //PlayerMove ����
     public PlayerController player2; //Player2Move ����
 
-    void FixedUpdate()
+    void Update()
     {
         // �÷��̾� ��ġ�� ���� ���ȭ��x��ǥ�� ���� �̵�. ī�޶� �̵��� ����
         if (player != null)

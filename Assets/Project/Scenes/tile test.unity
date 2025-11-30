@@ -2677,6 +2677,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4787823208954494458, guid: f1cd92384c957034e8ef9b2251d916af, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -9.45
+      objectReference: {fileID: 0}
+    - target: {fileID: 4787823208954494458, guid: f1cd92384c957034e8ef9b2251d916af, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -2.84
+      objectReference: {fileID: 0}
     - target: {fileID: 4877702116335014158, guid: f1cd92384c957034e8ef9b2251d916af, type: 3}
       propertyPath: m_LocalPosition.x
       value: 212.7
@@ -26263,9 +26271,9 @@ Tilemap:
     second:
       serializedVersion: 2
       m_TileIndex: 0
-      m_TileSpriteIndex: 8
+      m_TileSpriteIndex: 9
       m_TileMatrixIndex: 0
-      m_TileColorIndex: 4
+      m_TileColorIndex: 5
       m_TileObjectToInstantiateIndex: 65535
       dummyAlignment: 0
       m_AllTileFlags: 1073741827
@@ -26306,10 +26314,10 @@ Tilemap:
     m_Data: {fileID: 0}
   - m_RefCount: 0
     m_Data: {fileID: 0}
-  - m_RefCount: 1
-    m_Data: {fileID: 836519735}
   - m_RefCount: 0
     m_Data: {fileID: 0}
+  - m_RefCount: 1
+    m_Data: {fileID: 836519735}
   m_TileMatrixArray:
   - m_RefCount: 953
     m_Data:
@@ -26338,10 +26346,10 @@ Tilemap:
     m_Data: {r: 4.0475e-41, g: 4.0475e-41, b: 4.0475e-41, a: 4.0475e-41}
   - m_RefCount: 0
     m_Data: {r: 4.0475e-41, g: 4.0475e-41, b: 4.0475e-41, a: 4.0475e-41}
+  - m_RefCount: 0
+    m_Data: {r: 4.0467e-41, g: 4.0467e-41, b: 4.0467e-41, a: 4.0467e-41}
   - m_RefCount: 1
     m_Data: {r: 0.83574134, g: 0.52450025, b: 0.5770015, a: 1}
-  - m_RefCount: 0
-    m_Data: {r: 4.0475e-41, g: 4.0475e-41, b: 4.0475e-41, a: 4.0475e-41}
   - m_RefCount: 952
     m_Data: {r: 1, g: 1, b: 1, a: 1}
   m_TileObjectToInstantiateArray: []

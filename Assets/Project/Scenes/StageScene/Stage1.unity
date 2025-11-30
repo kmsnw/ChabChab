@@ -12877,6 +12877,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 883690719796589145, guid: f1cd92384c957034e8ef9b2251d916af, type: 3}
+      propertyPath: canWallClingWithStage
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4560233865007927234, guid: f1cd92384c957034e8ef9b2251d916af, type: 3}
       propertyPath: m_LocalPosition.x
       value: -4.16
@@ -12915,6 +12919,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4560233865007927234, guid: f1cd92384c957034e8ef9b2251d916af, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6545001993632723183, guid: f1cd92384c957034e8ef9b2251d916af, type: 3}
+      propertyPath: canWallClingWithStage
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7020704544089876180, guid: f1cd92384c957034e8ef9b2251d916af, type: 3}

@@ -11,6 +11,8 @@ using UnityEngine;
 [RequireComponent(typeof(Rigidbody2D))]
 public class PlayerMovement : MonoBehaviour
 {
+    public bool canWallClingWithStage = true;
+    
     private AudioSource _audioSource;
     [Header("Sound Clips")]
     public AudioClip jumpSound;
@@ -99,6 +101,9 @@ public class PlayerMovement : MonoBehaviour
         
         if (isGrounded)
         {
+            animator.SetBool(ANIM_IS_JUMPING, false);
+            animator.SetBool(ANIM_IS_FALLING, false);
+            
             
            canWallCling = true;
            animator.SetBool(ANIM_IS_GRAVITYREVERSED, false);
@@ -298,7 +303,7 @@ public class PlayerMovement : MonoBehaviour
         bool isTouchingWallLeft = CheckWallTouch(Vector2.left);
 
         // 벽 잡기 조건: 입력 키가 눌림, 벽에 닿음, 땅에 닿지 않음
-        if (isClingInput && (isTouchingWallLeft || isTouchingWallRight) && !CheckIfGrounded())
+        if (isClingInput && (isTouchingWallLeft || isTouchingWallRight) && !CheckIfGrounded() && canWallClingWithStage)
         {
             // if (gravityValue < 0f)
             // {

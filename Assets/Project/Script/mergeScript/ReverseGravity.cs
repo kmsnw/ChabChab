@@ -35,6 +35,7 @@ public class ReverseGravity : MonoBehaviour, IInteractable
             _playerInput.IsGravityReverse = _playerMovement.gravityValue < 0; 
             
             
+            Destroy(gameObject);
             
         } 
     }

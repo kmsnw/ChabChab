@@ -7,6 +7,8 @@ using UnityEngine;
 
 public class DoubleJumpItem : MonoBehaviour
 {
+    public bool canRespawn = false;
+    
     [Header("Respawn Settings")] 
     public float respawnTime = 5f;
     
@@ -22,6 +24,7 @@ public class DoubleJumpItem : MonoBehaviour
 
     void OnTriggerEnter2D(Collider2D collision)
     {
+        
         _playerMovement = collision.gameObject.GetComponent<PlayerMovement>();
 
         if (_playerMovement == null || !collision.CompareTag("Player")) return;
@@ -32,9 +35,19 @@ public class DoubleJumpItem : MonoBehaviour
         
         Debug.Log("active double jump");
         _playerMovement.isDoubleJump = true;
+
         
-        _respawnController.StartCoroutine(_respawnController.RespawnRoutine(gameObject, respawnTime));
+        gameObject.SetActive(false);
         
+        if (canRespawn)
+        {
+            
+            _respawnController.StartCoroutine(_respawnController.RespawnRoutine(gameObject, respawnTime));
+
+            
+        }
+
+
         
     }
     
