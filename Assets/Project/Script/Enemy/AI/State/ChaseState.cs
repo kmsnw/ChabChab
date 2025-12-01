@@ -32,7 +32,7 @@ namespace AI.FSM
             //추격 속도 설정
             owner.moveSpeed = owner.baseMoveSpeed * chaseSpeedMultiplier;
             
-            //추격 애니메이션...
+            //추격 애니메이션
             owner.animator.SetBool("isMove", true);
             owner.SetDetectionEffect(true);
         }
@@ -69,13 +69,8 @@ namespace AI.FSM
             {
                 // ReturnState로 전환 (강제 복귀)
                 owner.ChangeState(new ReturnState(owner)); 
-                
-                
-
                 return;
             }
-            
-
         }
 
         public void Exit()

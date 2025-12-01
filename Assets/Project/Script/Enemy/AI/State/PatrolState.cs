@@ -34,8 +34,6 @@ namespace AI.FSM
         }
         public void Execute()
         {
-            //추격 상태로 전환
-            
             
             //이동 로직 수행 -> targetpos..
             if (owner.IsMoving)

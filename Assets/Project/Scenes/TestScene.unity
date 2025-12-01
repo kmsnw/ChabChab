@@ -459,7 +459,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ef0e87d7800fa6e42b9e465064f48474, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  dashSpeed: 20
 --- !u!61 &714229377
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -975,6 +974,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4787823208954494458, guid: f1cd92384c957034e8ef9b2251d916af, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 5.85
+      objectReference: {fileID: 0}
     - target: {fileID: 7020704544089876180, guid: f1cd92384c957034e8ef9b2251d916af, type: 3}
       propertyPath: m_Name
       value: Sys_Stage
@@ -1201,7 +1204,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 3268705155291098349, guid: ead076fb2d8ee4b72a66b4fc00ceccb3, type: 3}
       propertyPath: m_LocalScale.x
-      value: 2.6999998
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 3268705155291098349, guid: ead076fb2d8ee4b72a66b4fc00ceccb3, type: 3}
       propertyPath: m_LocalPosition.x
@@ -1600,11 +1603,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4378218846205615451, guid: 30b9ccfc3c6b84e31b33606005c3d362, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -7.19
+      value: -10.2
       objectReference: {fileID: 0}
     - target: {fileID: 4378218846205615451, guid: 30b9ccfc3c6b84e31b33606005c3d362, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 19.621792
+      value: 22.4
       objectReference: {fileID: 0}
     - target: {fileID: 4378218846205615451, guid: 30b9ccfc3c6b84e31b33606005c3d362, type: 3}
       propertyPath: m_LocalPosition.z

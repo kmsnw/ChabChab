@@ -11,7 +11,7 @@ namespace AI.FSM
     public interface IState
     {
         
-        //수행 전 초기화작업
+        //수행 전 초기화
         void Enter();
         
         
