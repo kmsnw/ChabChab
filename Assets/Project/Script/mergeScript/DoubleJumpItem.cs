@@ -5,7 +5,7 @@ using UnityEngine;
 
 //�÷��̾�� ���� �� �������� �����ϰ� �ϴ� ������ ��ũ��Ʈ
 
-public class DoubleJumpItem : MonoBehaviour
+public class DoubleJumpItem : MonoBehaviour, ICheckpointSavable
 {
     public bool canRespawn = false;
     
@@ -48,6 +48,16 @@ public class DoubleJumpItem : MonoBehaviour
         }
 
 
+        
+    }
+    
+    public void SaveState()
+    {
+    }
+    
+    public void LoadState() //상태 초기화
+    {
+        gameObject.SetActive(true);
         
     }
     

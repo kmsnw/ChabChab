@@ -4,8 +4,6 @@ using UnityEngine;
 
 public class FallingPlatforms : MonoBehaviour, ICheckpointSavable
 {
-    public PlayerController player1;
-    public PlayerController player2;
 
     public bool twoPlayerInteract = false;
     public int interactCount = 0;

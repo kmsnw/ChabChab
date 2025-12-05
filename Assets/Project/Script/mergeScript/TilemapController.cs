@@ -25,8 +25,12 @@ public class TilemapController : MonoBehaviour
         if (collision.CompareTag("Player") && this.CompareTag("Key"))
         {
             animator.SetBool("IsTrigger", true);
-            OnTilemap.SetActive(true);
-            OffTilemap.SetActive(false);
+            
+            if(OnTilemap != null)
+                OnTilemap.SetActive(true);
+            
+            if(OffTilemap != null)
+                OffTilemap.SetActive(false);
         }
     }
 
@@ -35,8 +39,12 @@ public class TilemapController : MonoBehaviour
         if (collision.CompareTag("Player") && this.CompareTag("Key"))
         {
             animator.SetBool("IsTrigger", false);
-            OnTilemap.SetActive(false);
-            OffTilemap.SetActive(true);
+            
+            if(OnTilemap != null)
+                OnTilemap.SetActive(false);
+            
+            if(OffTilemap != null)
+                OffTilemap.SetActive(true);
         }
     } 
 } 

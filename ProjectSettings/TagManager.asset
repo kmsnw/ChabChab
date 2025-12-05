@@ -13,6 +13,8 @@ TagManager:
   - Interactable
   - Key
   - MovingPlatform
+  - Enemy
+  - Move
   layers:
   - Default
   - TransparentFX

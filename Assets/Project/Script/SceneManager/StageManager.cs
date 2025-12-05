@@ -120,6 +120,22 @@ public class StageManager : MonoBehaviour
     
     private IEnumerator PlayerDeathFlowCoroutine()
     {
+        
+        GameObject[] objectsToDisable = GameObject.FindGameObjectsWithTag("Move");
+
+        foreach (GameObject obj in objectsToDisable)
+        {
+            // 2. 오브젝트에 붙어있는 모든 MonoBehaviour 컴포넌트(스크립트)를 가져옵니다.
+            MonoBehaviour[] scripts = obj.GetComponents<MonoBehaviour>();
+
+            // 3. 찾은 모든 스크립트를 순회하며 비활성화합니다.
+            foreach (MonoBehaviour script in scripts)
+            {
+                script.enabled = false;
+
+            }
+        }
+
         _isPlayerDying = true;
         
         DisablePlayerControls(); // 조작 스크립트 비활성화
@@ -143,7 +159,7 @@ public class StageManager : MonoBehaviour
         // 페이드 인 (화면을 검게 만듦)
         yield return StartCoroutine(screenFader.FadeScreen(1f, fadeDuration)); 
         
-        // Game Over 이미지 활성화 및 점차 선명하게 (Opacity 조정 필요)
+        // Game Over 이미지 활성화 및 투명도
         if (gameOverImageUI != null)
         {
 
@@ -224,6 +240,20 @@ public class StageManager : MonoBehaviour
         
         // 페이드 아웃 (화면을 다시 공개)
         yield return StartCoroutine(screenFader.FadeScreen(0f, fadeDuration)); 
+        
+
+        foreach (GameObject obj in objectsToDisable)
+        {
+            // 2. 오브젝트에 붙어있는 모든 MonoBehaviour 컴포넌트(스크립트)를 가져옵니다.
+            MonoBehaviour[] scripts = obj.GetComponents<MonoBehaviour>();
+
+            // 3. 찾은 모든 스크립트를 순회하며 비활성화합니다.
+            foreach (MonoBehaviour script in scripts)
+            {
+                script.enabled = true;
+
+            }
+        }
         
 
         // 배경음악 다시 재생
