@@ -4,6 +4,13 @@ using UnityEngine;
 
 public class FallingPlatforms : MonoBehaviour, ICheckpointSavable
 {
+    public PlayerController player1;
+    public PlayerController player2;
+
+    public bool twoPlayerInteract = false;
+    public int interactCount = 0;
+
+    
     public Rigidbody2D rb; //������ٵ�2D 
     
     //체크포인트 로드
@@ -13,18 +20,29 @@ public class FallingPlatforms : MonoBehaviour, ICheckpointSavable
     public void Start()
     {
         _initialPosition = transform.position;
+        rb = GetComponent<Rigidbody2D>();
+        rb.isKinematic = true;
         
-        
-        rb = GetComponent<Rigidbody2D>(); //������ٵ�2D�� ������ rb�� �޾ƿ���
-        rb.isKinematic = true; // �߷�ȿ�� �ȹް�
     }
-    public void OnCollisionEnter2D(Collision2D collision)
+
+    void Update()
     {
-        if (collision.gameObject.tag == "Player") // �浹�� ��ü �±� "Player"�� ��
+        if (twoPlayerInteract)
         {
-            rb.isKinematic = false; // �߷�ȿ�� �ް�
-            rb.constraints = RigidbodyConstraints2D.FreezeRotation | RigidbodyConstraints2D.FreezePositionX; // ȸ������, X�� �̵�����
+            if (interactCount == 2)
+            {
+                rb.isKinematic = false;
+            }
+            
         }
+        else
+        {
+            if (interactCount >= 1)
+            {
+                rb.isKinematic = false;
+            }
+        }
+
     }
 
     public void SaveState()
@@ -38,4 +56,23 @@ public class FallingPlatforms : MonoBehaviour, ICheckpointSavable
         rb.isKinematic = _initialState;
         
     }
+    
+    
+    void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.gameObject.CompareTag("MovingPlatform"))
+        {
+             transform.SetParent(collision.transform);
+        }
+    }
+
+    void OnCollisionExit2D(Collision2D collision)
+    {
+        if (collision.gameObject.CompareTag("MovingPlatform"))
+        {
+            transform.SetParent(null);
+        }
+    }
+    
+  
 }

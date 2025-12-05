@@ -16,9 +16,8 @@ public class PlayerMovement : MonoBehaviour
     private AudioSource _audioSource;
     [Header("Sound Clips")]
     public AudioClip jumpSound;
-    
-    
-    
+
+    private RaycastHit2D hitCenter;
     
     private Collider2D _charCollider;
     private SpriteRenderer _spriteRenderer;
@@ -49,6 +48,7 @@ public class PlayerMovement : MonoBehaviour
     public float liftHeight = 0.5f;      // 캐릭터가 뜰 높이
     public float inputLockDuration = 1.0f; // 입력 잠금 유지 시간 (회전 시간 포함)
     private bool isControlLocked = false;
+    private float isWallControlLocked;
     
     // --- 상태 ---
     public bool isWallClinging { get; private set; } = false; // 벽 잡기 상태
@@ -85,7 +85,7 @@ public class PlayerMovement : MonoBehaviour
         if (rigidBody == null) Debug.LogError("No rigidbody");
         
         
-        _charCollider = GetComponent<BoxCollider2D>();
+        _charCollider = GetComponent<CapsuleCollider2D>();
         if (_charCollider == null) Debug.LogError("No box collider");
         
         
@@ -97,6 +97,7 @@ public class PlayerMovement : MonoBehaviour
 
     void Update()
     {
+        Debug.Log(isDoubleJump);
         isGrounded = CheckIfGrounded();
         
         if (isGrounded)
@@ -198,24 +199,33 @@ public class PlayerMovement : MonoBehaviour
         // ----------------------------------------------------
     }
     
-    // 이동
     public void Move(float horizontalInput)
     {
+        if (isControlLocked) return;
+    
+        // 1. 목표 수평 속도 계산
+        float targetSpeed = horizontalInput * maxSpeed;
+    
+        // 2. 가속/감속 처리 (Lerp 또는 MoveTowards 사용)
+        float newVelocityX = Mathf.Lerp(
+            rigidBody.velocity.x, 
+            targetSpeed, 
+            accelerationForce * Time.fixedDeltaTime // Lerp의 세 번째 인자는 비율(0~1)
+        );
+    
+        // 3. velocity 직접 할당
+        // 이제 물리 엔진이 아닌, 스크립트가 다음 프레임의 속도를 결정합니다.
+        rigidBody.velocity = new Vector2(newVelocityX, rigidBody.velocity.y);
+    
+        // 4. 애니메이션 및 방향 전환
         if (horizontalInput != 0)
         {
-            rigidBody.AddForce(Vector2.right * horizontalInput * accelerationForce, ForceMode2D.Impulse);
             Flip(horizontalInput);
         }
-
-        //속도 제한
-        if (rigidBody.velocity.x > maxSpeed) 
-            rigidBody.velocity = new Vector2(maxSpeed, rigidBody.velocity.y);
-        else if (rigidBody.velocity.x < -maxSpeed) 
-            rigidBody.velocity = new Vector2(-maxSpeed, rigidBody.velocity.y);
-            
-        //걷기 애니메이션 설정
         animator.SetBool(ANIM_IS_WALKING, Mathf.Abs(rigidBody.velocity.x) > 0.01f);
     }
+    
+    
     
     public void Jump(bool isJumpInput)
     {
@@ -382,11 +392,14 @@ public class PlayerMovement : MonoBehaviour
         // 2. 오른쪽 레이
         Vector2 originRight = new Vector2(boundsCenter.x + rayHorizontalOffset, originY);
         
+        Vector2 originCenter = new Vector2(boundsCenter.x, originY);
+        
         LayerMask combinedMask = platformLayer | playerLayer;
         
         RaycastHit2D hitLeft = Physics2D.Raycast(originLeft, rayDirection, groundRayDistance, combinedMask);
         RaycastHit2D hitRight = Physics2D.Raycast(originRight, rayDirection, groundRayDistance, combinedMask);
-        
+        hitCenter = Physics2D.Raycast(originCenter, rayDirection, groundRayDistance, combinedMask);
+
         // RaycastHit2D hitLeft = Physics2D.Raycast(originLeft, rayDirection, groundRayDistance, platformLayer);
         // RaycastHit2D hitRight = Physics2D.Raycast(originRight, rayDirection, groundRayDistance, platformLayer);
 
@@ -394,7 +407,7 @@ public class PlayerMovement : MonoBehaviour
         
         Debug.DrawRay(originLeft, Vector2.down * groundRayDistance, Color.yellow);
         Debug.DrawRay(originRight, Vector2.down * groundRayDistance, Color.yellow);
-       
+        Debug.DrawRay(originCenter, Vector2.down * groundRayDistance, Color.yellow);
         
         Collider2D selfCollider = _charCollider;
         
@@ -485,4 +498,20 @@ public class PlayerMovement : MonoBehaviour
         // 조작 활성화
         isControlLocked = false;
     }
+    
+    void OnTriggerStay2D(Collider2D collision)
+    {
+        
+        if (collision.gameObject.tag == "BouncePlatform" && (hitCenter.collider != null)) // �浹�� ��ü �±� "BouncePlatform"�� ��
+        {
+            isDoubleJump = true;
+            rigidBody.velocity = new Vector2(rigidBody.velocity.x, 0f); // y�ӵ� �ʱ�ȭ
+            rigidBody.AddForce(Vector2.up * jumpPower, ForceMode2D.Impulse);
+        }
+
+    }
+    
+    
+
+
 }

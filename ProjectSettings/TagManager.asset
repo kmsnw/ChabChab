@@ -12,6 +12,7 @@ TagManager:
   - Platform
   - Interactable
   - Key
+  - MovingPlatform
   layers:
   - Default
   - TransparentFX
@@ -22,7 +23,7 @@ TagManager:
   - platform
   - firstBack
   - secondBack
-  - 
+  - mainBack
   - 
   - 
   - 

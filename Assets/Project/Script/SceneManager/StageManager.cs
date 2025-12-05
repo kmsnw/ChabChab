@@ -536,6 +536,8 @@ public class StageManager : MonoBehaviour
 
     void Start()
     {
+        gameOverImageUI.gameObject.SetActive(false);
+        
         _backGroundSound = GetComponent<AudioSource>();
         
         _doorAnimator = ClearDoor.GetComponent<Animator>();

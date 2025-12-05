@@ -32,6 +32,7 @@ public class PlayerController : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
+
         //트리거된 오브젝트 캐스팅
         IInteractable interactable = other.GetComponent<IInteractable>();
         
@@ -60,7 +61,7 @@ public class PlayerController : MonoBehaviour
         //벽 붙기..
         _movement.HandleWallCling(_playerInput.IsInteracting);
 
-        if (transform.position.y < -3f)
+        if (transform.position.y < FindObjectOfType<Camera>().transform.position.y - 8)
         {
             Debug.Log("Player Falling");
             _stageManager.objectDeath(this.gameObject);

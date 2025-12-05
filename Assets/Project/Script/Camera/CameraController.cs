@@ -36,6 +36,8 @@ public class CameraController : MonoBehaviour
         }
         
         _camera.rect = viewportRect;
+        
+        
     }
 
     
@@ -54,6 +56,8 @@ public class CameraController : MonoBehaviour
         
         Vector3 desiredPosition = targetPlayer.position + offset;
     
+        
+        
         // Y축만 현재 카메라 위치로 덮어씌우기
         desiredPosition = new Vector3(desiredPosition.x, transform.position.y, desiredPosition.z);
         

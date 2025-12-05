@@ -10,6 +10,8 @@ public class MovingPlatform : MonoBehaviour
 
     private bool movingToX2 = true; // 현재 이동 방향 체크
 
+  
+    
     void Update()
     {
         Vector3 pos = transform.position;
