@@ -1,0 +1,59 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class FallingInteraction : MonoBehaviour
+{
+    public PlayerMove player;
+    public Player2Move player2;
+
+    public Rigidbody2D rb; 
+
+    // 한 명만 인터랙션해도 작동
+    public bool needOnePerson = false;
+
+    // 두 명 모두 인터랙션해야 작동
+    public bool needTwoPerson = true;
+
+    bool P1interact = false;
+    bool P2interact = false;
+
+    void Start()
+    {
+        if (rb != null)
+            rb.isKinematic = true;
+    }
+
+    void OnTriggerStay2D(Collider2D collision)
+    {
+        // 플레이어 인터랙션 체크
+        P1interact = player != null && player.isInteracting;
+        P2interact = player2 != null && player2.isInteracting;
+
+        if (!collision.CompareTag("Player"))
+            return;
+
+        if (needTwoPerson)
+        {
+            if (P1interact && P2interact)
+                OpenDoor();
+            return;
+        }
+
+        
+        if (needOnePerson)
+        {
+            if (P1interact || P2interact)
+                OpenDoor();
+            return;
+        }
+
+    }
+
+    void OpenDoor()
+    {
+        rb.isKinematic = false;
+        rb.constraints = RigidbodyConstraints2D.FreezeRotation |
+                         RigidbodyConstraints2D.FreezePositionX;
+    }
+}

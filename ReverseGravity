@@ -1,0 +1,64 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class ReverseGravity : MonoBehaviour
+{
+    public PlayerMove player;
+    public Player2Move player2;
+
+    public Camera player1Cam;
+    public Camera player2Cam;
+
+    private bool hasInteracted1 = false;
+    private bool hasInteracted2 = false;
+
+    public Rigidbody2D rb;
+
+    void Start()
+    {
+        rb = GetComponent<Rigidbody2D>();
+        rb.isKinematic = true;
+    }
+
+    void OnTriggerStay2D(Collider2D collision)
+    {
+        if (player != null && player.isInteracting && !hasInteracted1)
+        {
+            DoInteract1();
+        }
+
+        if (player2 != null && player2.isInteracting && !hasInteracted2)
+        {
+            DoInteract2();
+        }
+
+        if (hasInteracted1 || hasInteracted2)
+        {
+            Destroy(gameObject);
+        }
+    }
+
+    void DoInteract1()
+    {
+        player.G *= -1;
+        FlipCameraVertical(player1Cam);
+        hasInteracted1 = true;
+    }
+
+    void DoInteract2()
+    {
+        player2.G *= -1;
+        FlipCameraVertical(player2Cam);
+        hasInteracted2 = true;
+    }
+
+    // 화면 상하 반전, 좌우는 유지
+    void FlipCameraVertical(Camera cam)
+    {
+        Matrix4x4 mat = cam.projectionMatrix;
+        mat *= Matrix4x4.Scale(new Vector3(1, -1, 1));  // y축만 반전
+        cam.projectionMatrix = mat;
+    }
+}
+
