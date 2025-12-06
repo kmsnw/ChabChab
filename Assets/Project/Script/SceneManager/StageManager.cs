@@ -125,10 +125,9 @@ public class StageManager : MonoBehaviour
 
         foreach (GameObject obj in objectsToDisable)
         {
-            // 2. 오브젝트에 붙어있는 모든 MonoBehaviour 컴포넌트(스크립트)를 가져옵니다.
             MonoBehaviour[] scripts = obj.GetComponents<MonoBehaviour>();
 
-            // 3. 찾은 모든 스크립트를 순회하며 비활성화합니다.
+            
             foreach (MonoBehaviour script in scripts)
             {
                 script.enabled = false;
@@ -247,7 +246,7 @@ public class StageManager : MonoBehaviour
             // 2. 오브젝트에 붙어있는 모든 MonoBehaviour 컴포넌트(스크립트)를 가져옵니다.
             MonoBehaviour[] scripts = obj.GetComponents<MonoBehaviour>();
 
-            // 3. 찾은 모든 스크립트를 순회하며 비활성화합니다.
+            
             foreach (MonoBehaviour script in scripts)
             {
                 script.enabled = true;

@@ -332,8 +332,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 267d0c5f0bdd9426e9809017ba95162a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  player1: {fileID: 1499579573}
-  player2: {fileID: 1073789409}
   twoPlayerInteract: 0
   interactCount: 0
   rb: {fileID: 52030585}
@@ -606,8 +604,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 267d0c5f0bdd9426e9809017ba95162a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  player1: {fileID: 0}
-  player2: {fileID: 0}
   twoPlayerInteract: 0
   interactCount: 0
   rb: {fileID: 236693947}
@@ -1004,8 +1000,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 267d0c5f0bdd9426e9809017ba95162a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  player1: {fileID: 0}
-  player2: {fileID: 0}
   twoPlayerInteract: 0
   interactCount: 0
   rb: {fileID: 355097653}
@@ -1254,8 +1248,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 267d0c5f0bdd9426e9809017ba95162a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  player1: {fileID: 0}
-  player2: {fileID: 0}
   twoPlayerInteract: 0
   interactCount: 0
   rb: {fileID: 511967643}
@@ -2510,8 +2502,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 267d0c5f0bdd9426e9809017ba95162a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  player1: {fileID: 0}
-  player2: {fileID: 0}
   twoPlayerInteract: 0
   interactCount: 0
   rb: {fileID: 725010663}
@@ -3920,17 +3910,6 @@ TilemapCollider2D:
   m_MaximumTileChangeCount: 1000
   m_ExtrusionFactor: 0
   m_UseDelaunayMesh: 0
---- !u!114 &1073789409 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 6734286036990397397, guid: f1cd92384c957034e8ef9b2251d916af, type: 3}
-  m_PrefabInstance: {fileID: 495195129}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9314ea7a1e01a44448c4cd651e5a7618, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &1202538408
 GameObject:
   m_ObjectHideFlags: 0
@@ -15389,6 +15368,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 23b5381c525282c4a850e3d31926d36b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  FirstCamera: {fileID: 0}
+  SecondCamera: {fileID: 0}
 --- !u!61 &1349425600
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -15534,8 +15515,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 267d0c5f0bdd9426e9809017ba95162a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  player1: {fileID: 0}
-  player2: {fileID: 0}
   twoPlayerInteract: 0
   interactCount: 0
   rb: {fileID: 1436257812}
@@ -15773,8 +15752,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 267d0c5f0bdd9426e9809017ba95162a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  player1: {fileID: 0}
-  player2: {fileID: 0}
   twoPlayerInteract: 0
   interactCount: 0
   rb: {fileID: 1457503511}
@@ -16123,22 +16100,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 267d0c5f0bdd9426e9809017ba95162a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  player1: {fileID: 1499579573}
-  player2: {fileID: 1073789409}
   twoPlayerInteract: 0
   interactCount: 0
   rb: {fileID: 0}
---- !u!114 &1499579573 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 856803083774380387, guid: f1cd92384c957034e8ef9b2251d916af, type: 3}
-  m_PrefabInstance: {fileID: 495195129}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9314ea7a1e01a44448c4cd651e5a7618, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &1537833898
 GameObject:
   m_ObjectHideFlags: 0
@@ -16237,6 +16201,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 23b5381c525282c4a850e3d31926d36b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  FirstCamera: {fileID: 0}
+  SecondCamera: {fileID: 0}
 --- !u!61 &1537833902
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -16330,8 +16296,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 267d0c5f0bdd9426e9809017ba95162a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  player1: {fileID: 0}
-  player2: {fileID: 0}
   twoPlayerInteract: 0
   interactCount: 0
   rb: {fileID: 1540904241}
@@ -17720,8 +17684,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 267d0c5f0bdd9426e9809017ba95162a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  player1: {fileID: 1499579573}
-  player2: {fileID: 1073789409}
   twoPlayerInteract: 1
   interactCount: 0
   rb: {fileID: 0}
@@ -17963,8 +17925,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 267d0c5f0bdd9426e9809017ba95162a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  player1: {fileID: 1499579573}
-  player2: {fileID: 1073789409}
   twoPlayerInteract: 1
   interactCount: 0
   rb: {fileID: 0}
@@ -18287,8 +18247,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 267d0c5f0bdd9426e9809017ba95162a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  player1: {fileID: 0}
-  player2: {fileID: 0}
   twoPlayerInteract: 0
   interactCount: 0
   rb: {fileID: 1901031799}
@@ -18991,8 +18949,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 267d0c5f0bdd9426e9809017ba95162a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  player1: {fileID: 0}
-  player2: {fileID: 0}
   twoPlayerInteract: 0
   interactCount: 0
   rb: {fileID: 1958567130}
@@ -19285,8 +19241,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 267d0c5f0bdd9426e9809017ba95162a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  player1: {fileID: 0}
-  player2: {fileID: 0}
   twoPlayerInteract: 0
   interactCount: 0
   rb: {fileID: 1998016874}
@@ -19462,8 +19416,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 267d0c5f0bdd9426e9809017ba95162a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  player1: {fileID: 0}
-  player2: {fileID: 0}
   twoPlayerInteract: 0
   interactCount: 0
   rb: {fileID: 2019396760}
@@ -19675,8 +19627,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 267d0c5f0bdd9426e9809017ba95162a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  player1: {fileID: 0}
-  player2: {fileID: 0}
   twoPlayerInteract: 0
   interactCount: 0
   rb: {fileID: 2107556926}
@@ -19975,8 +19925,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 267d0c5f0bdd9426e9809017ba95162a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  player1: {fileID: 1499579573}
-  player2: {fileID: 1073789409}
   twoPlayerInteract: 0
   interactCount: 0
   rb: {fileID: 0}

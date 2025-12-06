@@ -15915,19 +15915,19 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 529739597365008251, guid: f1cd92384c957034e8ef9b2251d916af, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 100.82
+      value: -28.19
       objectReference: {fileID: 0}
     - target: {fileID: 529739597365008251, guid: f1cd92384c957034e8ef9b2251d916af, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -1.14
+      value: -3.08
       objectReference: {fileID: 0}
     - target: {fileID: 1085043793831493643, guid: f1cd92384c957034e8ef9b2251d916af, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 7.9
+      value: 8.28
       objectReference: {fileID: 0}
     - target: {fileID: 1085043793831493643, guid: f1cd92384c957034e8ef9b2251d916af, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 1.09
+      value: -0.82
       objectReference: {fileID: 0}
     - target: {fileID: 1263755323934681977, guid: f1cd92384c957034e8ef9b2251d916af, type: 3}
       propertyPath: maxHealth

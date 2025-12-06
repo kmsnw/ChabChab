@@ -72,7 +72,7 @@ void Start()
         isReadyForInput = true;
         if (nextPromptText != null)
         {
-            nextPromptText.gameObject.SetActive(true);
+            //nextPromptText.gameObject.SetActive(true);
             
             // Blink 코루틴을 시작 및 저장
             if (_blinkCoroutine != null) StopCoroutine(_blinkCoroutine);
