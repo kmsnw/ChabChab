@@ -1,9 +1,6 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;using Unity.VisualScripting;
-using UnityEditor.SceneManagement;
+using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Serialization;
+
 
 //체크포인트 스크립트
 //자신에 트리거 되어 최신 체크포인트 갱신 -> StageManager에 자신의 객체를 전달(위치 정보 활용)
